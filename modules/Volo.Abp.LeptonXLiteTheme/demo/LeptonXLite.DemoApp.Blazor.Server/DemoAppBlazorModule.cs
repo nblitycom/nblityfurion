@@ -1,5 +1,3 @@
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
 using LeptonXLite.DemoApp.Blazor.Menus;
 using LeptonXLite.DemoApp.Localization;
 using LeptonXLite.DemoApp.MultiTenancy;
@@ -88,7 +86,6 @@ namespace LeptonXLite.DemoApp.Blazor
             ConfigureAuthentication(context, configuration);
             ConfigureVirtualFileSystem(hostingEnvironment);
             ConfigureLocalizationServices();
-            ConfigureBlazorise(context);
             ConfigureRouter(context);
             ConfigureMenu(configuration);
             ConfigureDataProtection(context, configuration, hostingEnvironment);
@@ -217,13 +214,6 @@ namespace LeptonXLite.DemoApp.Blazor
                 options.Languages.Add(new LanguageInfo("de-DE", "de-DE", "Deutsch"));
                 options.Languages.Add(new LanguageInfo("es", "es", "Español"));
             });
-        }
-
-        private void ConfigureBlazorise(ServiceConfigurationContext context)
-        {
-            context.Services
-                .AddBootstrap5Providers()
-                .AddFontAwesomeIcons();
         }
 
         private void ConfigureMenu(IConfiguration configuration)

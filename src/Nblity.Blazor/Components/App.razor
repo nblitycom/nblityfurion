@@ -33,6 +33,18 @@
         .blazor-error-boundary { background: url(data:image/svg+xml;base64,...) no-repeat 1rem/1.8rem; padding: 1rem 1rem 1rem 3.7rem; color: #b32121; }
         .blazor-error-boundary::after { content: "An error has occurred." }
     </style>
+    <script>
+        // Prevent FOUC: read theme preference before Blazor renders.
+        // Sets initial background to match the expected MudBlazor theme so
+        // the page does not flash white then switch to dark (or vice-versa).
+        (function () {
+            try {
+                var isDark = localStorage.getItem('isDarkMode') === 'true';
+                document.documentElement.style.backgroundColor = isDark ? '#1a1a2e' : '#f5f5f5';
+                document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+            } catch (e) { }
+        })();
+    </script>
 </head>
 <body class="@rtl" style="margin: 0;">
 

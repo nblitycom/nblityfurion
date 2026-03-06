@@ -1,7 +1,5 @@
 using System.IO;
 using Volo.Abp.VirtualFileSystem;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
 using LeptonXLite.DemoApp.Blazor.Menus;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +36,6 @@ public class DemoAppBlazorModule : AbpModule
 
         ConfigureAuthentication(builder);
         ConfigureHttpClient(context, environment);
-        ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureUI(builder);
         ConfigureMenu(context);
@@ -58,13 +55,6 @@ public class DemoAppBlazorModule : AbpModule
         {
             options.MenuContributors.Add(new DemoAppMenuContributor(context.Services.GetConfiguration()));
         });
-    }
-
-    private void ConfigureBlazorise(ServiceConfigurationContext context)
-    {
-        context.Services
-            .AddBootstrap5Providers()
-            .AddFontAwesomeIcons();
     }
 
     private static void ConfigureAuthentication(WebAssemblyHostBuilder builder)
