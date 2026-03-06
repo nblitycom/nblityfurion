@@ -1,0 +1,113 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "5.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.Account": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.Identity": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "10.1.0",
+      "isInstalled": true,
+      "creationTime": "03/06/2026 02:34:11 +00:00"
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "Nblity.Application": {
+      "path": "src/Nblity.Application/Nblity.Application.abppkg",
+      "folder": "src"
+    },
+    "Nblity.Application.Tests": {
+      "path": "test/Nblity.Application.Tests/Nblity.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Nblity.Domain.Shared": {
+      "path": "src/Nblity.Domain.Shared/Nblity.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Nblity.Application.Contracts": {
+      "path": "src/Nblity.Application.Contracts/Nblity.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Nblity.HttpApi": {
+      "path": "src/Nblity.HttpApi/Nblity.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Nblity.HttpApi.Client": {
+      "path": "src/Nblity.HttpApi.Client/Nblity.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Nblity.EntityFrameworkCore.Tests": {
+      "path": "test/Nblity.EntityFrameworkCore.Tests/Nblity.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Nblity.EntityFrameworkCore": {
+      "path": "src/Nblity.EntityFrameworkCore/Nblity.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Nblity.TestBase": {
+      "path": "test/Nblity.TestBase/Nblity.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Nblity.Domain.Tests": {
+      "path": "test/Nblity.Domain.Tests/Nblity.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Nblity.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Nblity.HttpApi.Client.ConsoleTestApp/Nblity.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Nblity.DbMigrator": {
+      "path": "src/Nblity.DbMigrator/Nblity.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "Nblity.Blazor": {
+      "path": "src/Nblity.Blazor/Nblity.Blazor.abppkg",
+      "folder": "src"
+    },
+    "Nblity.Blazor.Client": {
+      "path": "src/Nblity.Blazor.Client/Nblity.Blazor.Client.abppkg",
+      "folder": "src"
+    },
+    "Nblity.Domain": {
+      "path": "src/Nblity.Domain/Nblity.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}

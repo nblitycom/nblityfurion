@@ -1,0 +1,24 @@
+<Solution>
+    <Configurations>
+        <Platform Name="Any CPU" />
+    </Configurations>
+    <Folder Name="/src/">
+        <Project Path="src/Nblity.Domain/Nblity.Domain.csproj" />
+        <Project Path="src/Nblity.Application/Nblity.Application.csproj" />
+        <Project Path="src/Nblity.EntityFrameworkCore/Nblity.EntityFrameworkCore.csproj" />
+        <Project Path="src/Nblity.Domain.Shared/Nblity.Domain.Shared.csproj" />
+        <Project Path="src/Nblity.Application.Contracts/Nblity.Application.Contracts.csproj" />
+        <Project Path="src/Nblity.HttpApi/Nblity.HttpApi.csproj" />
+        <Project Path="src/Nblity.HttpApi.Client/Nblity.HttpApi.Client.csproj" />
+        <Project Path="src/Nblity.DbMigrator/Nblity.DbMigrator.csproj" />
+        <Project Path="src/Nblity.Blazor/Nblity.Blazor.csproj" />
+        <Project Path="src/Nblity.Blazor.Client/Nblity.Blazor.Client.csproj" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="test/Nblity.Application.Tests/Nblity.Application.Tests.csproj" />
+        <Project Path="test/Nblity.EntityFrameworkCore.Tests/Nblity.EntityFrameworkCore.Tests.csproj" />
+        <Project Path="test/Nblity.TestBase/Nblity.TestBase.csproj" />
+        <Project Path="test/Nblity.Domain.Tests/Nblity.Domain.Tests.csproj" />
+        <Project Path="test/Nblity.HttpApi.Client.ConsoleTestApp/Nblity.HttpApi.Client.ConsoleTestApp.csproj" />
+    </Folder>
+</Solution>
