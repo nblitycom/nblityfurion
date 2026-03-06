@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using Volo.Abp.AspNetCore.Components.Web.Configuration;
@@ -19,7 +18,7 @@ public partial class PermissionManagementModal
 
     [Inject] protected IOptions<AbpLocalizationOptions> LocalizationOptions { get; set; }
 
-    protected Modal _modal;
+    private bool _visible;
 
     protected string _providerName;
     protected string _providerKey;
@@ -30,7 +29,7 @@ public partial class PermissionManagementModal
 
     protected List<PermissionGrantInfoDto> _disabledPermissions = new List<PermissionGrantInfoDto>();
 
-    protected string _selectedTabName;
+    protected int _selectedTabIndex;
 
     protected bool _selectAllDisabled;
 
@@ -65,12 +64,18 @@ public partial class PermissionManagementModal
             GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
             GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
 
-            await InvokeAsync(_modal.Show);
+            _visible = true;
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
             await HandleErrorAsync(ex);
         }
+    }
+
+    protected virtual async Task OnGrantAllValueChanged(bool? value)
+    {
+        await GrantAllAsync(value ?? false);
     }
 
     protected virtual async Task GrantAllAsync(bool grantAll)
@@ -120,22 +125,19 @@ public partial class PermissionManagementModal
             SetPermissionDepths(group.Permissions, null, 0);
         }
 
-        if (_groups.Count != 0)
-        {
-            _selectedTabName = GetNormalizedGroupName(_groups.First().Name);
-        }
+        _selectedTabIndex = 0;
     }
 
     protected Task CloseModal()
     {
-        return InvokeAsync(_modal.Hide);
+        _visible = false;
+        return InvokeAsync(StateHasChanged);
     }
 
     protected virtual async Task SaveAsync()
     {
         try
         {
-
             var updateDto = new UpdatePermissionsDto
             {
                 Permissions = _allGroups
@@ -162,13 +164,20 @@ public partial class PermissionManagementModal
 
             await CurrentApplicationConfigurationCacheResetService.ResetAsync(userId);
 
-            await InvokeAsync(_modal.Hide);
+            _visible = false;
+            await InvokeAsync(StateHasChanged);
             await Notify.Success(L["SavedSuccessfully"]);
         }
         catch (Exception ex)
         {
             await HandleErrorAsync(ex);
         }
+    }
+
+    protected virtual string GetTabText(PermissionGroupDto group)
+    {
+        var grantedCount = group.Permissions.Count(x => x.IsGranted);
+        return $"{group.DisplayName} ({grantedCount})";
     }
 
     protected virtual string GetNormalizedGroupName(string name)
@@ -233,7 +242,7 @@ public partial class PermissionManagementModal
 
     private void SetParentPermissionGrant(PermissionGroupDto permissionGroup, PermissionGrantInfoDto permission)
     {
-        if(permission.ParentName == null)
+        if (permission.ParentName == null)
         {
             return;
         }
@@ -242,7 +251,6 @@ public partial class PermissionManagementModal
         SetPermissionGrant(parentPermission, true);
 
         SetParentPermissionGrant(permissionGroup, parentPermission);
-
     }
 
     private void SetPermissionGrant(PermissionGrantInfoDto permission, bool value)
@@ -305,12 +313,6 @@ public partial class PermissionManagementModal
         );
     }
 
-    protected virtual Task ClosingModal(ModalClosingEventArgs eventArgs)
-    {
-        eventArgs.Cancel = eventArgs.CloseReason == CloseReason.FocusLostClosing;
-        return Task.CompletedTask;
-    }
-
     protected virtual bool IsPermissionGroupDisabled(PermissionGroupDto group)
     {
         var permissions = group.Permissions;
@@ -345,12 +347,5 @@ public partial class PermissionManagementModal
         NormalizePermissionGroup(false);
 
         await InvokeAsync(StateHasChanged);
-    }
-
-    protected virtual Task OnSelectedTabChangedAsync(string name)
-    {
-        _selectedTabName = name;
-
-        return Task.CompletedTask;
     }
 }
