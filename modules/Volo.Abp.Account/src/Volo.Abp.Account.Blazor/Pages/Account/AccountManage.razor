@@ -9,7 +9,7 @@
 @inherits AbpAccountComponentBase
 
 <MudTabs Position="Position.Left" Rounded="true" PanelClass="pa-3">
-    <MudTabPanel Text="@L["ProfileTab:Password"]" ID="Password">
+    <MudTabPanel Text="@L["ProfileTab:Password"]" ID="@("Password")">
         @if (ChangePasswordModel != null)
         {
             <EditForm id="ChangePasswordForm" Model="@ChangePasswordModel" OnValidSubmit="ChangePasswordAsync">
@@ -32,7 +32,7 @@
             </EditForm>
         }
     </MudTabPanel>
-    <MudTabPanel Text="@L["ProfileTab:PersonalInfo"]" ID="PersonalInfo">
+    <MudTabPanel Text="@L["ProfileTab:PersonalInfo"]" ID="@("PersonalInfo")">
         @if (PersonalInfoModel != null)
         {
             <EditForm id="UpdatePersonalInfoForm" Model="@PersonalInfoModel" OnValidSubmit="UpdatePersonalInfoAsync">
@@ -65,7 +65,7 @@
 
                     if (!propertyInfo.Name.EndsWith("_Text"))
                     {
-                        if (propertyInfo.IsEnum())
+                        if (propertyInfo.Type is { IsEnum: true })
                         {
                             <SelectExtensionProperty PropertyInfo="@propertyInfo" Entity="@PersonalInfoModel" TEntity="PersonalInfoModel" TResourceType="AccountResource" LH="@LH" />
                         }
@@ -75,12 +75,11 @@
                         }
                         else
                         {
-                            var inputType = propertyInfo.GetInputType();
-                            __builder.OpenComponent(0, inputType.MakeGenericType(new[] { typeof(PersonalInfoModel), typeof(AccountResource) }));
-                            __builder.AddAttribute(1, "PropertyInfo", propertyInfo);
-                            __builder.AddAttribute(2, "Entity", PersonalInfoModel);
-                            __builder.AddAttribute(3, "LH", LH);
-                            __builder.CloseComponent();
+                            <MudTextField T="string"
+                                          Label="@propertyInfo.Name"
+                                          Value="@(PersonalInfoModel.ExtraProperties.ContainsKey(propertyInfo.Name) ? PersonalInfoModel.ExtraProperties[propertyInfo.Name]?.ToString() : null)"
+                                          ValueChanged="@((string v) => PersonalInfoModel.ExtraProperties[propertyInfo.Name] = v)"
+                                          Class="mt-3" />
                         }
                     }
                 }

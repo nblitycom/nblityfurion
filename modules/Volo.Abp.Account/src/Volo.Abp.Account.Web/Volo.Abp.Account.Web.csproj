@@ -37,6 +37,7 @@
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="10.1.0" />
     <PackageReference Include="Volo.Abp.Mapperly" Version="10.1.0" />
     <ProjectReference Include="..\Volo.Abp.Account.Application.Contracts\Volo.Abp.Account.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Volo.Abp.Account.Blazor\Volo.Abp.Account.Blazor.csproj" />
     <ProjectReference Include="../../../Volo.Abp.Identity/src/Volo.Abp.Identity.AspNetCore/Volo.Abp.Identity.AspNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>

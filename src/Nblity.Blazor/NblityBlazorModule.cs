@@ -33,8 +33,6 @@ using Volo.Abp.Mapperly;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.AspNetCore.Components.WebAssembly.Theming.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
-using Volo.Abp.AspNetCore.Components.Server.LeptonXLiteTheme.Bundling;
 using Volo.Abp.AspNetCore.Components.Server.LeptonXLiteTheme;
 using Volo.Abp.AspNetCore.Components.WebAssembly.LeptonXLiteTheme.Bundling;
 using Volo.Abp.Localization;
@@ -173,37 +171,6 @@ public class NblityBlazorModule : AbpModule
         {
             // Blazor Web App
             options.Parameters.InteractiveAuto = true;
-
-            // MVC UI
-            options.StyleBundles.Configure(
-                LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
-            );
-
-            options.ScriptBundles.Configure(
-                LeptonXLiteThemeBundles.Scripts.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-scripts.js");
-
-                    if (hostingEnvironment.IsDevelopment())
-                    {
-                        bundle.AddFiles("/dev-login-helper.js");
-                    }
-                }
-            );
-
-            // Blazor UI
-            options.StyleBundles.Configure(
-                BlazorLeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
-            );
         });
 
         Configure<AbpBundlingOptions>(options =>
@@ -227,6 +194,7 @@ public class NblityBlazorModule : AbpModule
                 options.FileSets.ReplaceEmbeddedByPhysical<AbpAspNetCoreMvcUiLeptonXLiteThemeModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.LeptonXLiteTheme{0}src{0}Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<AbpAspNetCoreComponentsServerLeptonXLiteThemeModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.LeptonXLiteTheme{0}src{0}Volo.Abp.AspNetCore.Components.Server.LeptonXLiteTheme", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<AbpAccountWebOpenIddictModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.Account{0}src{0}Volo.Abp.Account.Web.OpenIddict", Path.DirectorySeparatorChar)));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpAccountWebModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.Account{0}src{0}Volo.Abp.Account.Web", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<AbpTenantManagementBlazorServerModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.TenantManagement{0}src{0}Volo.Abp.TenantManagement.Blazor.Server", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<AbpIdentityBlazorServerModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.Identity{0}src{0}Volo.Abp.Identity.Blazor.Server", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<NblityDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Nblity.Domain"));
