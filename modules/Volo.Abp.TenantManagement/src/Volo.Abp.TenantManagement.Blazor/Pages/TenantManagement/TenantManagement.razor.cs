@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazorise;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
@@ -52,9 +51,6 @@ public partial class TenantManagement
 
     protected override ValueTask SetBreadcrumbItemsAsync()
     {
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(LUiNavigation["Menu:Administration"]));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Menu:TenantManagement"]));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Tenants"]));
         return base.SetBreadcrumbItemsAsync();
     }
 
@@ -191,11 +187,6 @@ public partial class TenantManagement
 
     protected override ValueTask SetToolbarItemsAsync()
     {
-        Toolbar.AddButton(L["NewTenant"],
-            OpenCreateModalAsync,
-            IconName.Add,
-            requiredPolicyName: CreatePolicyName);
-
         return base.SetToolbarItemsAsync();
     }
 

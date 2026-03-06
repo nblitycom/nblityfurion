@@ -4,164 +4,77 @@
 
 @if (EmailSettings != null)
 {
-    <Form>
-        <Validations @ref="@EmailSettingValidation" Model="@EmailSettings" ValidateOnLoad="false">
-            <Row>
-                <Column>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["DefaultFromDisplayName"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EmailSettings.DefaultFromDisplayName">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["DefaultFromAddress"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EmailSettings.DefaultFromAddress">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["SmtpHost"]</FieldLabel>
-                            <TextEdit @bind-Text="@EmailSettings.SmtpHost">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["SmtpPort"]</FieldLabel>
-                            <NumericEdit TValue="int" @bind-Value="@EmailSettings.SmtpPort">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </NumericEdit>
-                        </Field>
-                    </Validation>
-                    <Field>
-                        <Check TValue="bool" @bind-Checked="@EmailSettings.SmtpEnableSsl">@L["SmtpEnableSsl"]</Check>
-                    </Field>
-                    <Field>
-                        <Check TValue="bool" @bind-Checked="@EmailSettings.SmtpUseDefaultCredentials">@L["SmtpUseDefaultCredentials"]</Check>
-                    </Field>
-                    @if (!EmailSettings.SmtpUseDefaultCredentials)
-                    {
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["SmtpDomain"]</FieldLabel>
-                                <TextEdit @bind-Text="@EmailSettings.SmtpDomain">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["SmtpUserName"]</FieldLabel>
-                                <TextEdit @bind-Text="@EmailSettings.SmtpUserName">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["SmtpPassword"]</FieldLabel>
-                                <TextEdit Role="TextRole.Password" @bind-Text="@EmailSettings.SmtpPassword" Placeholder="@L["SmtpPasswordPlaceholder"].Value">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                    }
-                </Column>
-            </Row>
-        </Validations>
-        <hr />
-        <Row>
-            <Column>
-                @if (HasSendTestEmailPermission)
+    <MudForm @ref="_emailForm">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="@EmailSettings.DefaultFromDisplayName"
+                              Label="@($"{L["DefaultFromDisplayName"]} *")"
+                              Class="mt-3" />
+                <MudTextField @bind-Value="@EmailSettings.DefaultFromAddress"
+                              Label="@($"{L["DefaultFromAddress"]} *")"
+                              InputType="InputType.Email" Class="mt-3" />
+                <MudTextField @bind-Value="@EmailSettings.SmtpHost"
+                              Label="@L["SmtpHost"]" Class="mt-3" />
+                <MudNumericField T="int" @bind-Value="@EmailSettings.SmtpPort"
+                                 Label="@L["SmtpPort"]" Class="mt-3" />
+                <MudCheckBox T="bool" @bind-Value="@EmailSettings.SmtpEnableSsl"
+                             Label="@L["SmtpEnableSsl"]" Class="mt-3" />
+                <MudCheckBox T="bool" @bind-Value="@EmailSettings.SmtpUseDefaultCredentials"
+                             Label="@L["SmtpUseDefaultCredentials"]" Class="mt-3" />
+                @if (!EmailSettings.SmtpUseDefaultCredentials)
                 {
-                    <Button style="margin: 0.25rem" Color="Color.Primary" Outline Clicked="OpenSendTestEmailModalAsync">@L["SendTestEmail"]</Button>
+                    <MudTextField @bind-Value="@EmailSettings.SmtpDomain"
+                                  Label="@L["SmtpDomain"]" Class="mt-3" />
+                    <MudTextField @bind-Value="@EmailSettings.SmtpUserName"
+                                  Label="@L["SmtpUserName"]" Class="mt-3" />
+                    <MudTextField @bind-Value="@EmailSettings.SmtpPassword"
+                                  Label="@L["SmtpPassword"]"
+                                  InputType="@(_showSmtpPassword ? InputType.Text : InputType.Password)"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(_showSmtpPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                  OnAdornmentClick="@(() => _showSmtpPassword = !_showSmtpPassword)"
+                                  Placeholder="@L["SmtpPasswordPlaceholder"].Value"
+                                  Class="mt-3" />
                 }
-                <SubmitButton Clicked="@UpdateSettingsAsync"/>
-            </Column>
-
-        </Row>
-    </Form>
+            </MudItem>
+        </MudGrid>
+        <MudDivider Class="mt-3 mb-3" />
+        <MudStack Row="true" Spacing="2">
+            @if (HasSendTestEmailPermission)
+            {
+                <MudButton Color="MudBlazor.Color.Secondary" Variant="Variant.Outlined"
+                           OnClick="OpenSendTestEmailModalAsync">@L["SendTestEmail"]</MudButton>
+            }
+            <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
+                       OnClick="@UpdateSettingsAsync">@L["Save"]</MudButton>
+        </MudStack>
+    </MudForm>
 
     @if (HasSendTestEmailPermission)
     {
-        <Modal @ref="SendTestEmailModal">
-            <ModalContent Centered="true">
-                <Form id="SendTestEmailForm">
-                    <ModalHeader>
-                        <ModalTitle>@L["SendTestEmail"]</ModalTitle>
-                        <CloseButton Clicked="CloseSendTestEmailModalAsync"/>
-                    </ModalHeader>
-                    <ModalBody>
-                        <Validations @ref="@EmailSettingTestValidation" Model="@SendTestEmailInput" ValidateOnLoad="false">
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["SenderEmailAddress"]</FieldLabel>
-                                    <TextEdit @bind-Text="@SendTestEmailInput.SenderEmailAddress" Autofocus="true">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["TargetEmailAddress"]</FieldLabel>
-                                    <TextEdit @bind-Text="@SendTestEmailInput.TargetEmailAddress">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["Subject"]</FieldLabel>
-                                    <TextEdit @bind-Text="@SendTestEmailInput.Subject">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["Body"]</FieldLabel>
-                                    <TextEdit @bind-Text="@SendTestEmailInput.Body">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                        </Validations>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button Color="Color.Secondary" Clicked="CloseSendTestEmailModalAsync">@L["Cancel"]</Button>
-                        <SubmitButton Form="SendTestEmailForm" Clicked="SendTestEmailAsync">@L["Send"]</SubmitButton>
-                    </ModalFooter>
-                </Form>
-            </ModalContent>
-        </Modal>
+        <MudDialog @bind-Visible="_sendTestEmailVisible" Options="@(new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true })">
+            <TitleContent>
+                <MudText Typo="Typo.h6">@L["SendTestEmail"]</MudText>
+            </TitleContent>
+            <DialogContent>
+                <MudForm @ref="_testEmailForm">
+                    <MudTextField @bind-Value="@SendTestEmailInput.SenderEmailAddress"
+                                  Label="@($"{L["SenderEmailAddress"]} *")"
+                                  InputType="InputType.Email" AutoFocus="true" Class="mt-3" />
+                    <MudTextField @bind-Value="@SendTestEmailInput.TargetEmailAddress"
+                                  Label="@($"{L["TargetEmailAddress"]} *")"
+                                  InputType="InputType.Email" Class="mt-3" />
+                    <MudTextField @bind-Value="@SendTestEmailInput.Subject"
+                                  Label="@($"{L["Subject"]} *")" Class="mt-3" />
+                    <MudTextField @bind-Value="@SendTestEmailInput.Body"
+                                  Label="@L["Body"]" Class="mt-3" Lines="3" />
+                </MudForm>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="CloseSendTestEmailModalAsync">@L["Cancel"]</MudButton>
+                <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
+                           OnClick="SendTestEmailAsync">@L["Send"]</MudButton>
+            </DialogActions>
+        </MudDialog>
     }
 }

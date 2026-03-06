@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Volo.Abp.BlazoriseUI;
+using MudBlazor;
 using Volo.Abp.SettingManagement.Localization;
 
 namespace Volo.Abp.SettingManagement.Blazor.Pages.SettingManagement;
@@ -31,8 +31,8 @@ public partial class SettingManagement
 
     protected async override Task OnInitializedAsync()
     {
-        BreadcrumbItems.Add(new BreadcrumbItem(LUiNavigation["Menu:Administration"].Value));
-        BreadcrumbItems.Add(new BreadcrumbItem(@L["Menu:Settings"].Value));
+        BreadcrumbItems.Add(new BreadcrumbItem(LUiNavigation["Menu:Administration"].Value, href: null));
+        BreadcrumbItems.Add(new BreadcrumbItem(L["Menu:Settings"].Value, href: null));
 
         SettingComponentCreationContext = new SettingComponentCreationContext(ServiceProvider);
 
@@ -43,7 +43,7 @@ public partial class SettingManagement
         SettingComponentCreationContext.Normalize();
         SettingItemRenders.Clear();
 
-        if(SelectedGroup.IsNullOrEmpty() && SettingComponentCreationContext.Groups.Any())
+        if (SelectedGroup.IsNullOrEmpty() && SettingComponentCreationContext.Groups.Any())
         {
             SelectedGroup = GetNormalizedString(SettingComponentCreationContext.Groups.First().Id);
         }

@@ -105,7 +105,7 @@ public partial class ResourcePermissionManagementModal
 
         if (_providerKeyAutocomplete != null)
         {
-            await _providerKeyAutocomplete.Clear();
+            await _providerKeyAutocomplete.ClearAsync();
         }
 
         CreateEntity = new CreateModel
@@ -216,7 +216,7 @@ public partial class ResourcePermissionManagementModal
 
         if (_providerKeyAutocomplete != null)
         {
-            await _providerKeyAutocomplete.Clear();
+            await _providerKeyAutocomplete.ClearAsync();
         }
 
         await InvokeAsync(StateHasChanged);
