@@ -108,49 +108,4 @@
         <Project Path="src/Nblity.Blazor/Nblity.Blazor.csproj" />
         <Project Path="src/Nblity.Blazor.Client/Nblity.Blazor.Client.csproj" />
     </Folder>
-    <Folder Name="/test/">
-        <Project Path="test/Nblity.Application.Tests/Nblity.Application.Tests.csproj" />
-        <Project Path="test/Nblity.EntityFrameworkCore.Tests/Nblity.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="test/Nblity.TestBase/Nblity.TestBase.csproj" />
-        <Project Path="test/Nblity.Domain.Tests/Nblity.Domain.Tests.csproj" />
-        <Project Path="test/Nblity.HttpApi.Client.ConsoleTestApp/Nblity.HttpApi.Client.ConsoleTestApp.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.Account.Tests/">
-        <Project Path="modules/Volo.Abp.Account/test/Volo.Abp.Account.Application.Tests/Volo.Abp.Account.Application.Tests.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.FeatureManagement.Tests/">
-        <Project Path="modules/Volo.Abp.FeatureManagement/test/Volo.Abp.FeatureManagement.Application.Tests/Volo.Abp.FeatureManagement.Application.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.FeatureManagement/test/Volo.Abp.FeatureManagement.Domain.Tests/Volo.Abp.FeatureManagement.Domain.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.FeatureManagement/test/Volo.Abp.FeatureManagement.EntityFrameworkCore.Tests/Volo.Abp.FeatureManagement.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.FeatureManagement/test/Volo.Abp.FeatureManagement.MongoDB.Tests/Volo.Abp.FeatureManagement.MongoDB.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.FeatureManagement/test/Volo.Abp.FeatureManagement.TestBase/Volo.Abp.FeatureManagement.TestBase.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.Identity.Tests/">
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.Application.Tests/Volo.Abp.Identity.Application.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.AspNetCore.Tests/Volo.Abp.Identity.AspNetCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.Domain.Tests/Volo.Abp.Identity.Domain.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.EntityFrameworkCore.Tests/Volo.Abp.Identity.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.MongoDB.Tests/Volo.Abp.Identity.MongoDB.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.Identity/test/Volo.Abp.Identity.TestBase/Volo.Abp.Identity.TestBase.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.PermissionManagement.Tests/">
-        <Project Path="modules/Volo.Abp.PermissionManagement/test/Volo.Abp.PermissionManagement.Application.Tests/Volo.Abp.PermissionManagement.Application.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.PermissionManagement/test/Volo.Abp.PermissionManagement.Domain.Tests/Volo.Abp.PermissionManagement.Domain.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.PermissionManagement/test/Volo.Abp.PermissionManagement.EntityFrameworkCore.Tests/Volo.Abp.PermissionManagement.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.PermissionManagement/test/Volo.Abp.PermissionManagement.MongoDB.Tests/Volo.Abp.PermissionManagement.MongoDB.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.PermissionManagement/test/Volo.Abp.PermissionManagement.TestBase/Volo.Abp.PermissionManagement.TestBase.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.SettingManagement.Tests/">
-        <Project Path="modules/Volo.Abp.SettingManagement/test/Volo.Abp.SettingManagement.EntityFrameworkCore.Tests/Volo.Abp.SettingManagement.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.SettingManagement/test/Volo.Abp.SettingManagement.MongoDB.Tests/Volo.Abp.SettingManagement.MongoDB.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.SettingManagement/test/Volo.Abp.SettingManagement.TestBase/Volo.Abp.SettingManagement.TestBase.csproj" />
-        <Project Path="modules/Volo.Abp.SettingManagement/test/Volo.Abp.SettingManagement.Tests/Volo.Abp.SettingManagement.Tests.csproj" />
-    </Folder>
-    <Folder Name="/test/Volo.Abp.TenantManagement.Tests/">
-        <Project Path="modules/Volo.Abp.TenantManagement/test/Volo.Abp.TenantManagement.Application.Tests/Volo.Abp.TenantManagement.Application.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.TenantManagement/test/Volo.Abp.TenantManagement.Domain.Tests/Volo.Abp.TenantManagement.Domain.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.TenantManagement/test/Volo.Abp.TenantManagement.EntityFrameworkCore.Tests/Volo.Abp.TenantManagement.EntityFrameworkCore.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.TenantManagement/test/Volo.Abp.TenantManagement.MongoDB.Tests/Volo.Abp.TenantManagement.MongoDB.Tests.csproj" />
-        <Project Path="modules/Volo.Abp.TenantManagement/test/Volo.Abp.TenantManagement.TestBase/Volo.Abp.TenantManagement.TestBase.csproj" />
-    </Folder>
 </Solution>
