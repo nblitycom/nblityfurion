@@ -22,17 +22,17 @@
             </MudItem>
         </MudGrid>
 
-        <fieldset class="border rounded-4 p-3">
-            <legend class="px-1 h5 mb-0">@L["PermissionGroup"]</legend>
+        <MudPaper Outlined="true" Class="rounded pa-3">
+            <MudText Typo="Typo.h6" Class="mb-2">@L["PermissionGroup"]</MudText>
 
             @if (_groups != null && _groups.Any())
             {
-                <div class="lpx-scroll-pills-container">
+                <MudStack Class="lpx-scroll-pills-container">
                     <MudTabs @bind-ActivePanelIndex="_selectedTabIndex" Position="Position.Left" Rounded="true" PanelClass="pa-3">
                         @foreach (var group in _groups)
                         {
                             <MudTabPanel Text="@GetTabText(group)">
-                                <div class="w-100 ps-1" style="height: 500px;overflow-y: auto">
+                                <MudPaper Elevation="0" Class="w-100 ps-1 permission-scroll-container">
                                     <MudCheckBox T="bool"
                                                  Disabled="@(IsPermissionGroupDisabled(group))"
                                                  Value="@(group.Permissions.All(x => x.IsGranted))"
@@ -43,21 +43,21 @@
 
                                     @foreach (var permission in group.Permissions)
                                     {
-                                        <div style="@($"margin-inline-start: {GetPermissionDepthOrDefault(permission.Name) * 20}px")">
+                                        <MudStack Class="@($"perm-depth-{GetPermissionDepthOrDefault(permission.Name)}")">
                                             <MudCheckBox T="bool"
                                                          Disabled="@(IsDisabledPermission(permission))"
                                                          Value="@permission.IsGranted"
                                                          ValueChanged="@(async (b) => await PermissionChanged(b, group, permission))"
                                                          Label="@GetShownName(permission)" />
-                                        </div>
+                                        </MudStack>
                                     }
-                                </div>
+                                </MudPaper>
                             </MudTabPanel>
                         }
                     </MudTabs>
-                </div>
+                </MudStack>
             }
-        </fieldset>
+        </MudPaper>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="CloseModal">@L["Cancel"]</MudButton>

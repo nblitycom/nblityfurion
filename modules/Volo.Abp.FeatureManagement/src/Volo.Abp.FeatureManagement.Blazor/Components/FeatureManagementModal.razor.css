@@ -1,0 +1,7 @@
+/* Feature depth-based indentation (20 px per level) */
+.feature-depth-0 { margin-left: 0; }
+.feature-depth-1 { margin-left: 20px; }
+.feature-depth-2 { margin-left: 40px; }
+.feature-depth-3 { margin-left: 60px; }
+.feature-depth-4 { margin-left: 80px; }
+.feature-depth-5 { margin-left: 100px; }

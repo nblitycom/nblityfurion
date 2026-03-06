@@ -23,7 +23,7 @@
                         @foreach (var feature in capturedGroup.Features)
                         {
                             var capturedFeature = feature;
-                            <div class="mt-2" style="@GetFeatureStyles(capturedFeature)">
+                            <MudStack Class="@($"mt-2 feature-depth-{capturedFeature.Depth}")">
                                 @{
                                     var disabled = IsDisabled(capturedFeature);
                                     if (capturedFeature.ValueType is FreeTextStringValueType)
@@ -70,7 +70,7 @@
                                         }
                                     }
                                 }
-                            </div>
+                            </MudStack>
                         }
                     </MudTabPanel>
                 }

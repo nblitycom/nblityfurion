@@ -1,0 +1,4 @@
+/* Fixed width for the Actions column header */
+::deep .actions-column {
+    width: 150px;
+}
