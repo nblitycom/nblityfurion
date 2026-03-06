@@ -1,2 +1,3 @@
-/* Global styles for Blazor application */
-/* Note: blazor-error-ui styles are already included inline in App.razor */
+/* Global styles for Blazor + MudBlazor application */
+/* MudBlazor styles are loaded via _content/MudBlazor/MudBlazor.min.css */
+/* Application-scoped styles are in Nblity.Blazor.styles.css and Nblity.Blazor.Client.styles.css */
