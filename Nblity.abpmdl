@@ -2,14 +2,14 @@
   "template": "app",
   "imports": {
     "Volo.Abp.LeptonXLiteTheme": {
-      "version": "5.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.LeptonXLiteTheme/Volo.Abp.LeptonXLiteTheme.abpmdl"
     },
     "Volo.Abp.Account": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.Account/Volo.Abp.Account.abpmdl"
     },
     "Volo.Abp.OpenIddict": {
       "version": "10.1.0",
@@ -17,29 +17,29 @@
       "creationTime": "03/06/2026 02:34:11 +00:00"
     },
     "Volo.Abp.Identity": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.Identity/Volo.Abp.Identity.abpmdl"
     },
     "Volo.Abp.TenantManagement": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.TenantManagement/Volo.Abp.TenantManagement.abpmdl"
     },
     "Volo.Abp.SettingManagement": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.SettingManagement/Volo.Abp.SettingManagement.abpmdl"
     },
     "Volo.Abp.PermissionManagement": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.PermissionManagement/Volo.Abp.PermissionManagement.abpmdl"
     },
     "Volo.Abp.FeatureManagement": {
-      "version": "10.1.0",
       "isInstalled": true,
-      "creationTime": "03/06/2026 02:34:11 +00:00"
+      "creationTime": "03/06/2026 02:34:11 +00:00",
+      "path": "modules/Volo.Abp.FeatureManagement/Volo.Abp.FeatureManagement.abpmdl"
     }
   },
   "folders": {

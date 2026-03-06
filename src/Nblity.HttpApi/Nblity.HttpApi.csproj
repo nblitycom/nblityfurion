@@ -1,27 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\common.props" />
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>Nblity</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Nblity.Application.Contracts\Nblity.Application.Contracts.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="10.1.0" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="10.1.0" />
-    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="10.1.0" />
+    <ProjectReference Include="../../modules/Volo.Abp.FeatureManagement/src/Volo.Abp.FeatureManagement.HttpApi/Volo.Abp.FeatureManagement.HttpApi.csproj" />
+    <ProjectReference Include="../../modules/Volo.Abp.PermissionManagement/src/Volo.Abp.PermissionManagement.HttpApi/Volo.Abp.PermissionManagement.HttpApi.csproj" />
+    <ProjectReference Include="../../modules/Volo.Abp.SettingManagement/src/Volo.Abp.SettingManagement.HttpApi/Volo.Abp.SettingManagement.HttpApi.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="10.1.0" />
-    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="10.1.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="10.1.0" />
+    <ProjectReference Include="../../modules/Volo.Abp.Identity/src/Volo.Abp.Identity.HttpApi/Volo.Abp.Identity.HttpApi.csproj" />
+    <ProjectReference Include="../../modules/Volo.Abp.TenantManagement/src/Volo.Abp.TenantManagement.HttpApi/Volo.Abp.TenantManagement.HttpApi.csproj" />
+    <ProjectReference Include="../../modules/Volo.Abp.Account/src/Volo.Abp.Account.HttpApi/Volo.Abp.Account.HttpApi.csproj" />
   </ItemGroup>
-
 </Project>

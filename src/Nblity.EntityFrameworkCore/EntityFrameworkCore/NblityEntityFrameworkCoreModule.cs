@@ -1,3 +1,5 @@
+using System.IO;
+using Volo.Abp.VirtualFileSystem;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Uow;

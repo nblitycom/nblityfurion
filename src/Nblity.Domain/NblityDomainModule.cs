@@ -1,3 +1,5 @@
+using System.IO;
+using Volo.Abp.VirtualFileSystem;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nblity.Localization;

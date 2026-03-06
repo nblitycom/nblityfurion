@@ -226,6 +226,11 @@ public class NblityBlazorModule : AbpModule
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.ReplaceEmbeddedByPhysical<NblityDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Nblity.Domain.Shared"));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpAspNetCoreMvcUiLeptonXLiteThemeModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.LeptonXLiteTheme{0}src{0}Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite", Path.DirectorySeparatorChar)));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpAspNetCoreComponentsServerLeptonXLiteThemeModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.LeptonXLiteTheme{0}src{0}Volo.Abp.AspNetCore.Components.Server.LeptonXLiteTheme", Path.DirectorySeparatorChar)));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpAccountWebOpenIddictModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.Account{0}src{0}Volo.Abp.Account.Web.OpenIddict", Path.DirectorySeparatorChar)));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpTenantManagementBlazorServerModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.TenantManagement{0}src{0}Volo.Abp.TenantManagement.Blazor.Server", Path.DirectorySeparatorChar)));
+                options.FileSets.ReplaceEmbeddedByPhysical<AbpIdentityBlazorServerModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}modules{0}Volo.Abp.Identity{0}src{0}Volo.Abp.Identity.Blazor.Server", Path.DirectorySeparatorChar)));
                 options.FileSets.ReplaceEmbeddedByPhysical<NblityDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Nblity.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<NblityApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Nblity.Application.Contracts"));
                 options.FileSets.ReplaceEmbeddedByPhysical<NblityApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Nblity.Application"));

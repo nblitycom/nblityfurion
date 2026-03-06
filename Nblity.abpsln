@@ -10,6 +10,27 @@
   "modules": {
     "Nblity": {
       "path": "Nblity.abpmdl"
+    },
+    "Volo.Abp.FeatureManagement": {
+      "path": "modules/Volo.Abp.FeatureManagement/Volo.Abp.FeatureManagement.abpmdl"
+    },
+    "Volo.Abp.Identity": {
+      "path": "modules/Volo.Abp.Identity/Volo.Abp.Identity.abpmdl"
+    },
+    "Volo.Abp.PermissionManagement": {
+      "path": "modules/Volo.Abp.PermissionManagement/Volo.Abp.PermissionManagement.abpmdl"
+    },
+    "Volo.Abp.SettingManagement": {
+      "path": "modules/Volo.Abp.SettingManagement/Volo.Abp.SettingManagement.abpmdl"
+    },
+    "Volo.Abp.TenantManagement": {
+      "path": "modules/Volo.Abp.TenantManagement/Volo.Abp.TenantManagement.abpmdl"
+    },
+    "Volo.Abp.Account": {
+      "path": "modules/Volo.Abp.Account/Volo.Abp.Account.abpmdl"
+    },
+    "Volo.Abp.LeptonXLiteTheme": {
+      "path": "modules/Volo.Abp.LeptonXLiteTheme/Volo.Abp.LeptonXLiteTheme.abpmdl"
     }
   },
   "runProfiles": {
@@ -19,9 +40,7 @@
   },
   "options": {
     "httpRequests": {
-      "ignoredUrls": [
-      
-      ]
+      "ignoredUrls": []
     }
   },
   "creatingStudioConfiguration": {
@@ -45,11 +64,31 @@
     "theme": "leptonx-lite",
     "themeStyle": "",
     "themeMenuPlacement": "",
-    "mobileFramework": "none",
     "publicWebsite": "false",
     "socialLogin": "true",
     "sampleCrudPage": "false",
-    "selectedLanguages": ["English", "Arabic", "Chinese (Simplified)", "Chinese (Traditional)", "Czech", "English (United Kingdom)", "Finnish", "French", "German (Germany)", "Hindi ", "Hungarian", "Icelandic", "Italian", "Portuguese (Brazil)", "Romanian (Romania)", "Russian", "Slovak", "Spanish", "Swedish", "Turkish", ],
+    "selectedLanguages": [
+      "English",
+      "Arabic",
+      "Chinese (Simplified)",
+      "Chinese (Traditional)",
+      "Czech",
+      "English (United Kingdom)",
+      "Finnish",
+      "French",
+      "German (Germany)",
+      "Hindi ",
+      "Hungarian",
+      "Icelandic",
+      "Italian",
+      "Portuguese (Brazil)",
+      "Romanian (Romania)",
+      "Russian",
+      "Slovak",
+      "Spanish",
+      "Swedish",
+      "Turkish"
+    ],
     "defaultLanguage": "English",
     "createCommand": "abp new Nblity -t app --ui-framework blazor-webapp --database-provider ef --database-management-system postgresql --theme leptonx-lite --skip-migration  --skip-migrator  --without-cms-kit --dont-run-install-libs --dont-run-bundling -no-file-management"
   }
