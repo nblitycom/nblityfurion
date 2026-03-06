@@ -1,9 +1,11 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Blazorise;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using MudBlazor;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Components.Web.Extensibility.EntityActions;
 using Volo.Abp.AspNetCore.Components.Web.Extensibility.TableColumns;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
@@ -28,6 +30,13 @@ public partial class RoleManagement
 
     protected List<TableColumn> RoleManagementTableColumns => TableColumns.Get<RoleManagement>();
 
+    // MudBlazor state
+    private bool _createDialogVisible;
+    private bool _editDialogVisible;
+    private MudForm _createForm;
+    private MudForm _editForm;
+    private MudTable<IdentityRoleDto> _table;
+
     public RoleManagement()
     {
         ObjectMapperContext = typeof(AbpIdentityBlazorModule);
@@ -45,6 +54,109 @@ public partial class RoleManagement
         BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Menu:IdentityManagement"].Value));
         BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Roles"].Value));
         return base.SetBreadcrumbItemsAsync();
+    }
+
+    private async Task<TableData<IdentityRoleDto>> LoadServerData(TableState state, CancellationToken ct)
+    {
+        if (!string.IsNullOrEmpty(state.SortLabel))
+        {
+            CurrentSorting = state.SortDirection == MudBlazor.SortDirection.Descending
+                ? $"{state.SortLabel} DESC"
+                : state.SortLabel;
+        }
+        else
+        {
+            CurrentSorting = string.Empty;
+        }
+
+        CurrentPage = state.Page + 1;
+
+        if (GetListInput is ISortedResultRequest sorted)
+        {
+            sorted.Sorting = CurrentSorting;
+        }
+
+        if (GetListInput is IPagedResultRequest paged)
+        {
+            paged.SkipCount = state.Page * state.PageSize;
+        }
+
+        if (GetListInput is ILimitedResultRequest limited)
+        {
+            limited.MaxResultCount = state.PageSize;
+        }
+
+        var result = await AppService.GetListAsync(GetListInput);
+
+        return new TableData<IdentityRoleDto>
+        {
+            Items = result.Items,
+            TotalItems = (int)result.TotalCount
+        };
+    }
+
+    protected override async Task GetEntitiesAsync()
+    {
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        else
+        {
+            await base.GetEntitiesAsync();
+        }
+    }
+
+    protected override async Task OpenCreateModalAsync()
+    {
+        // base.OpenCreateModalAsync initializes NewEntity and has null-safe modal handling
+        await base.OpenCreateModalAsync();
+        _createDialogVisible = true;
+    }
+
+    protected override async Task OpenEditModalAsync(IdentityRoleDto entity)
+    {
+        // base.OpenEditModalAsync loads the entity and has null-safe modal handling
+        await base.OpenEditModalAsync(entity);
+        _editDialogVisible = true;
+    }
+
+    protected override async Task OnCreatedEntityAsync()
+    {
+        _createDialogVisible = false;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        await Notify.Success(GetCreateMessage());
+    }
+
+    protected override async Task OnUpdatedEntityAsync()
+    {
+        _editDialogVisible = false;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        await Notify.Success(GetUpdateMessage());
+    }
+
+    protected override Task CloseCreateModalAsync()
+    {
+        _createDialogVisible = false;
+        NewEntity = new IdentityRoleCreateDto();
+        return Task.CompletedTask;
+    }
+
+    protected override Task CloseEditModalAsync()
+    {
+        _editDialogVisible = false;
+        return Task.CompletedTask;
+    }
+
+    private async Task OpenPermissionsModalAsync(IdentityRoleDto entity)
+    {
+        await PermissionManagementModal.OpenAsync(PermissionProviderName, entity.Name);
     }
 
     protected override ValueTask SetEntityActionsAsync()

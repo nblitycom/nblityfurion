@@ -2,15 +2,14 @@ using System.IO;
 using Volo.Abp.VirtualFileSystem;
 using System;
 using System.Net.Http;
-using Blazorise;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
+using MudBlazor.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nblity.Blazor.Client.Navigation;
+using Nblity.Blazor.Client.Services.UI;
 using OpenIddict.Abstractions;
 using Volo.Abp.AspNetCore.Components.Web;
 using Volo.Abp.AspNetCore.Components.Web.Theming.Routing;
@@ -56,7 +55,7 @@ public class NblityBlazorClientModule : AbpModule
 
         ConfigureAuthentication(builder);
         ConfigureHttpClient(context, environment);
-        ConfigureBlazorise(context);
+        ConfigureMudBlazor(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
     }
@@ -79,16 +78,18 @@ public class NblityBlazorClientModule : AbpModule
         });
     }
 
-    private void ConfigureBlazorise(ServiceConfigurationContext context)
+    private void ConfigureMudBlazor(ServiceConfigurationContext context)
     {
-        context.Services
-            .AddBlazorise(options =>
-            {
-                // TODO (IMPORTANT): To use Blazorise, you need a license key. Get your license key directly from Blazorise, follow  the instructions at https://abp.io/faq#how-to-get-blazorise-license-key
-                //options.ProductToken = "Your Product Token";
-            })
-            .AddBootstrap5Providers()
-            .AddFontAwesomeIcons();
+        context.Services.AddMudServices(config =>
+        {
+            config.SnackbarConfiguration.PositionClass = MudBlazor.Defaults.Classes.Position.BottomRight;
+            config.SnackbarConfiguration.PreventDuplicates = false;
+            config.SnackbarConfiguration.NewestOnTop = true;
+            config.SnackbarConfiguration.ShowCloseIcon = true;
+            config.SnackbarConfiguration.VisibleStateDuration = 5000;
+        });
+
+        context.Services.AddScoped<TabWorkspaceService>();
     }
 
     private static void ConfigureAuthentication(WebAssemblyHostBuilder builder)

@@ -1,0 +1,281 @@
+@using MudBlazor
+@using Nblity.Blazor.Client.Services.UI
+@using Volo.Abp.UI.Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+@inject TabWorkspaceService TabService
+@inject NavigationManager Navigation
+@inject IMenuManager MenuManager
+@inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
+
+<MudThemeProvider Theme="_theme" IsDarkMode="@_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1" Fixed="true" Dense="true" Style="background-color: var(--mud-palette-surface); color: var(--mud-palette-text-primary); border-bottom: 1px solid var(--mud-palette-lines-default);">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="MudBlazor.Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <MudImage Src="/images/logo/leptonxlite/logo-light.svg" Alt="Logo" Height="28" Class="mr-2" />
+        <MudText Typo="Typo.h6" Style="font-weight: 600;">Nblity</MudText>
+        <MudSpacer />
+        <AuthorizeView>
+            <Authorized>
+                <MudMenu Icon="@Icons.Material.Filled.Person" Color="MudBlazor.Color.Inherit" Dense="true"
+                         AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+                    <ActivatorContent>
+                        <MudChip T="string" Color="MudBlazor.Color.Primary" Variant="Variant.Text" Icon="@Icons.Material.Filled.AccountCircle">
+                            @_userName
+                        </MudChip>
+                    </ActivatorContent>
+                    <ChildContent>
+                        @if (_userMenu != null)
+                        {
+                            @foreach (var item in _userMenu.Items)
+                            {
+                                <MudMenuItem OnClick="@(() => NavigateToMenuItem(item))">
+                                    @item.DisplayName
+                                </MudMenuItem>
+                            }
+                        }
+                    </ChildContent>
+                </MudMenu>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton Variant="Variant.Text" Color="MudBlazor.Color.Primary" Href="Account/Login">Login</MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                       Color="MudBlazor.Color.Inherit" OnClick="@ToggleDarkMode" Title="Toggle Dark Mode" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="false"
+               ClipMode="DrawerClipMode.Always" Fixed="true">
+        <MudDrawerHeader Dense="true" Class="pa-2">
+            <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">Menu</MudText>
+        </MudDrawerHeader>
+        <MudNavMenu Dense="true" Bordered="true" Color="MudBlazor.Color.Primary">
+            @if (_mainMenu != null)
+            {
+                @foreach (var item in _mainMenu.Items)
+                {
+                    @RenderMenuItem(item)
+                }
+            }
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent Style="padding-top: 48px;">
+        @* Tab Bar *@
+        <div style="background-color: var(--mud-palette-surface); border-bottom: 1px solid var(--mud-palette-lines-default); display: flex; align-items: center; padding: 0 8px; min-height: 36px; overflow-x: auto; white-space: nowrap;">
+            @foreach (var tab in TabService.Tabs)
+            {
+                var isActive = TabService.ActiveRoute == tab.Route ||
+                    NormalizeRoute(TabService.ActiveRoute) == NormalizeRoute(tab.Route);
+                <div @key="tab.Route"
+                     style="display: inline-flex; align-items: center; padding: 4px 12px; margin: 2px 2px; cursor: pointer; border-radius: 4px 4px 0 0;
+                            font-size: 0.8125rem;
+                            @(isActive ? "background-color: var(--mud-palette-primary); color: white; font-weight: 600;" : "background-color: var(--mud-palette-background-gray); color: var(--mud-palette-text-secondary);")">
+                    <span @onclick="@(() => TabService.ActivateTab(tab.Route))" style="margin-right: 4px;">
+                        @tab.Title
+                    </span>
+                    @if (tab.IsClosable)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Close" Size="MudBlazor.Size.Small"
+                                       Style="@(isActive ? "color: white;" : "")"
+                                       OnClick="@(() => TabService.CloseTab(tab.Route))" />
+                    }
+                </div>
+            }
+            <MudSpacer />
+            @if (TabService.Tabs.Count(t => t.IsClosable) > 0)
+            {
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="MudBlazor.Size.Small" Dense="true">
+                    <MudMenuItem OnClick="@(() => CloseOtherTabs())">Close Others</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => TabService.CloseAllTabsExceptHome())">Close All</MudMenuItem>
+                </MudMenu>
+            }
+        </div>
+
+        @* Content Area *@
+        <MudContainer MaxWidth="MaxWidth.False" Class="pa-4" Style="min-height: calc(100vh - 130px);">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+    private ApplicationMenu? _mainMenu;
+    private ApplicationMenu? _userMenu;
+    private string _userName = "";
+
+    private MudTheme _theme = new MudTheme
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#5b6abf",
+            Secondary = "#ff4081",
+            AppbarBackground = "#ffffff",
+            AppbarText = "#424242",
+            DrawerBackground = "#ffffff",
+            DrawerText = "#424242",
+            Surface = "#ffffff",
+            Background = "#f5f5f5",
+            TextPrimary = "#212121",
+            TextSecondary = "#757575",
+            ActionDefault = "#757575",
+        },
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#7c8ce0",
+            Secondary = "#ff4081",
+            AppbarBackground = "#1e1e2d",
+            DrawerBackground = "#1e1e2d",
+            Surface = "#27293d",
+            Background = "#1a1a2e",
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        TabService.OnTabsChanged += OnTabsChanged;
+
+        try
+        {
+            _mainMenu = await MenuManager.GetMainMenuAsync();
+            _userMenu = await MenuManager.GetAsync(StandardMenus.User);
+        }
+        catch
+        {
+            // Menu may not be available yet
+        }
+
+        try
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                _userName = user.FindFirst("name")?.Value
+                    ?? user.FindFirst("preferred_username")?.Value
+                    ?? user.Identity.Name
+                    ?? "User";
+            }
+        }
+        catch
+        {
+            // Auth state may not be available
+        }
+
+        // Sync current route to tabs
+        SyncCurrentRoute();
+    }
+
+    private void SyncCurrentRoute()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var route = uri.AbsolutePath;
+
+        if (route != "/")
+        {
+            var existing = TabService.Tabs.FirstOrDefault(t =>
+                NormalizeRoute(t.Route) == NormalizeRoute(route));
+            if (existing == null)
+            {
+                var title = GetTitleFromRoute(route);
+                TabService.OpenTab(route, title);
+            }
+        }
+    }
+
+    private RenderFragment RenderMenuItem(ApplicationMenuItem item) => __builder =>
+    {
+        if (item.Items.Count > 0)
+        {
+            <MudNavGroup Title="@item.DisplayName" Icon="@GetMudIcon(item.Icon)" Expanded="true">
+                @foreach (var child in item.Items)
+                {
+                    @RenderMenuItem(child)
+                }
+            </MudNavGroup>
+        }
+        else
+        {
+            var url = item.Url?.TrimStart('~') ?? "/";
+            <MudNavLink Href="@url" Icon="@GetMudIcon(item.Icon)"
+                        Match="NavLinkMatch.Prefix"
+                        OnClick="@(() => OnMenuItemClicked(item))">
+                @item.DisplayName
+            </MudNavLink>
+        }
+    };
+
+    private void OnMenuItemClicked(ApplicationMenuItem item)
+    {
+        var url = item.Url?.TrimStart('~') ?? "/";
+        TabService.OpenTab(url, item.DisplayName.ToString(), item.Icon);
+    }
+
+    private void NavigateToMenuItem(ApplicationMenuItem item)
+    {
+        var url = item.Url?.TrimStart('~') ?? "/";
+        Navigation.NavigateTo(url, item.Target == "_blank");
+    }
+
+    private string GetMudIcon(string? iconClass)
+    {
+        if (string.IsNullOrEmpty(iconClass)) return Icons.Material.Filled.Circle;
+
+        return iconClass switch
+        {
+            var i when i.Contains("fa-home") => Icons.Material.Filled.Home,
+            var i when i.Contains("fa-cog") || i.Contains("fa-gear") || i.Contains("fa-cogs") => Icons.Material.Filled.Settings,
+            var i when i.Contains("fa-users") || i.Contains("fa-user") => Icons.Material.Filled.People,
+            var i when i.Contains("fa-id-card") || i.Contains("fa-key") => Icons.Material.Filled.VpnKey,
+            var i when i.Contains("fa-building") => Icons.Material.Filled.Business,
+            var i when i.Contains("fa-lock") => Icons.Material.Filled.Lock,
+            var i when i.Contains("fa-list") => Icons.Material.Filled.List,
+            var i when i.Contains("fa-shield") => Icons.Material.Filled.Shield,
+            _ => Icons.Material.Filled.Circle
+        };
+    }
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+
+    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private void CloseOtherTabs()
+    {
+        if (TabService.ActiveTab != null)
+            TabService.CloseOtherTabs(TabService.ActiveTab.Route);
+    }
+
+    private void OnTabsChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private static string NormalizeRoute(string route)
+    {
+        if (string.IsNullOrEmpty(route)) return "/";
+        route = route.TrimEnd('/').ToLowerInvariant();
+        return string.IsNullOrEmpty(route) ? "/" : route;
+    }
+
+    private static string GetTitleFromRoute(string route)
+    {
+        if (string.IsNullOrEmpty(route) || route == "/") return "Home";
+        var segments = route.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length == 0) return "Home";
+        var last = segments[^1];
+        return string.Join(" ", last.Split('-', '_')
+            .Select(s => s.Length > 0 ? char.ToUpper(s[0]) + s[1..] : s));
+    }
+
+    public void Dispose()
+    {
+        TabService.OnTabsChanged -= OnTabsChanged;
+    }
+}

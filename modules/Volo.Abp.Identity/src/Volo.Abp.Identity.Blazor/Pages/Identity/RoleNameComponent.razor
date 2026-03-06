@@ -8,9 +8,9 @@
 @(Data.As<IdentityRoleDto>().Name)
 @if (Data.As<IdentityRoleDto>().IsDefault)
 {
-    <Badge Color="Color.Success" Margin="Margin.Is1.FromStart">@L["DisplayName:IsDefault"]</Badge>
+    <MudChip T="string" Color="MudBlazor.Color.Success" Size="MudBlazor.Size.Small" Class="ml-1">@L["DisplayName:IsDefault"]</MudChip>
 }
 @if (Data.As<IdentityRoleDto>().IsPublic)
 {
-    <Badge Color="Color.Info" Margin="Margin.Is1.FromStart">@L["DisplayName:IsPublic"]</Badge>
+    <MudChip T="string" Color="MudBlazor.Color.Info" Size="MudBlazor.Size.Small" Class="ml-1">@L["DisplayName:IsPublic"]</MudChip>
 }

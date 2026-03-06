@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Blazorise;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Components.Web.Extensibility.EntityActions;
 using Volo.Abp.AspNetCore.Components.Web.Extensibility.TableColumns;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
@@ -37,13 +41,21 @@ public partial class UserManagement
     protected string CreateModalSelectedTab = DefaultSelectedTab;
 
     protected string EditModalSelectedTab = DefaultSelectedTab;
-    protected bool ShowPassword { get; set; }
+
+    public bool IsEditCurrentUser { get; set; }
 
     protected PageToolbar Toolbar { get; } = new();
 
     private List<TableColumn> UserManagementTableColumns => TableColumns.Get<UserManagement>();
-    private TextRole _passwordTextRole = TextRole.Password;
-    public bool IsEditCurrentUser { get; set; }
+
+    // MudBlazor state
+    private bool _createDialogVisible;
+    private bool _editDialogVisible;
+    private bool _showPassword;
+    private string _searchText;
+    private MudForm _createForm;
+    private MudForm _editForm;
+    private MudTable<IdentityUserDto> _table;
 
     [Inject]
     protected IPermissionChecker PermissionChecker { get; set; }
@@ -81,11 +93,65 @@ public partial class UserManagement
         return base.SetBreadcrumbItemsAsync();
     }
 
-    protected virtual async Task OnSearchTextChanged(string value)
+    private async Task<TableData<IdentityUserDto>> LoadServerData(TableState state, CancellationToken ct)
     {
-        GetListInput.Filter = value;
-        CurrentPage = 1;
-        await GetEntitiesAsync();
+        GetListInput.Filter = _searchText;
+
+        if (!string.IsNullOrEmpty(state.SortLabel))
+        {
+            CurrentSorting = state.SortDirection == MudBlazor.SortDirection.Descending
+                ? $"{state.SortLabel} DESC"
+                : state.SortLabel;
+        }
+        else
+        {
+            CurrentSorting = string.Empty;
+        }
+
+        CurrentPage = state.Page + 1;
+
+        if (GetListInput is ISortedResultRequest sorted)
+        {
+            sorted.Sorting = CurrentSorting;
+        }
+
+        if (GetListInput is IPagedResultRequest paged)
+        {
+            paged.SkipCount = state.Page * state.PageSize;
+        }
+
+        if (GetListInput is ILimitedResultRequest limited)
+        {
+            limited.MaxResultCount = state.PageSize;
+        }
+
+        var result = await AppService.GetListAsync(GetListInput);
+
+        return new TableData<IdentityUserDto>
+        {
+            Items = result.Items,
+            TotalItems = (int)result.TotalCount
+        };
+    }
+
+    protected override async Task GetEntitiesAsync()
+    {
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        else
+        {
+            await base.GetEntitiesAsync();
+        }
+    }
+
+    private async Task OnSearchKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await GetEntitiesAsync();
+        }
     }
 
     protected override async Task SetPermissionsAsync()
@@ -106,11 +172,14 @@ public partial class UserManagement
             IsAssigned = x.IsDefault
         }).ToArray();
 
-        ChangePasswordTextRole(TextRole.Password);
+        _showPassword = false;
+
+        // base.OpenCreateModalAsync initializes NewEntity and has null-safe modal handling
         await base.OpenCreateModalAsync();
 
         NewEntity.IsActive = true;
         NewEntity.LockoutEnabled = true;
+        _createDialogVisible = true;
     }
 
     protected override Task OnCreatingEntityAsync()
@@ -119,6 +188,16 @@ public partial class UserManagement
         NewEntity.RoleNames = NewUserRoles.Where(x => x.IsAssigned).Select(x => x.Name).ToArray();
 
         return base.OnCreatingEntityAsync();
+    }
+
+    protected override async Task OnCreatedEntityAsync()
+    {
+        _createDialogVisible = false;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        await Notify.Success(GetCreateMessage());
     }
 
     protected override async Task OpenEditModalAsync(IdentityUserDto entity)
@@ -137,10 +216,13 @@ public partial class UserManagement
                     Name = x.Name,
                     IsAssigned = userRoleIds.Contains(x.Id)
                 }).ToArray();
-
-                ChangePasswordTextRole(TextRole.Password);
             }
+
+            _showPassword = false;
+
+            // base.OpenEditModalAsync loads the entity and has null-safe modal handling
             await base.OpenEditModalAsync(entity);
+            _editDialogVisible = true;
         }
         catch (Exception ex)
         {
@@ -158,9 +240,44 @@ public partial class UserManagement
         return base.OnUpdatingEntityAsync();
     }
 
+    protected override async Task OnUpdatedEntityAsync()
+    {
+        _editDialogVisible = false;
+        if (_table != null)
+        {
+            await _table.ReloadServerData();
+        }
+        await Notify.Success(GetUpdateMessage());
+    }
+
+    protected override Task CloseCreateModalAsync()
+    {
+        _createDialogVisible = false;
+        NewEntity = new IdentityUserCreateDto();
+        return Task.CompletedTask;
+    }
+
+    protected override Task CloseEditModalAsync()
+    {
+        _editDialogVisible = false;
+        return Task.CompletedTask;
+    }
+
     protected override string GetDeleteConfirmationMessage(IdentityUserDto entity)
     {
         return string.Format(L["UserDeletionConfirmationMessage"], entity.UserName);
+    }
+
+    private async Task OpenPermissionsModalAsync(IdentityUserDto entity)
+    {
+        await PermissionManagementModal.OpenAsync(PermissionProviderName,
+            entity.Id.ToString(),
+            entity.UserName);
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        _showPassword = !_showPassword;
     }
 
     protected override ValueTask SetEntityActionsAsync()
@@ -240,20 +357,6 @@ public partial class UserManagement
             requiredPolicyName: CreatePolicyName);
 
         return base.SetToolbarItemsAsync();
-    }
-
-    protected virtual void ChangePasswordTextRole(TextRole? textRole)
-    {
-        if (textRole == null)
-        {
-            ChangePasswordTextRole(_passwordTextRole == TextRole.Password ? TextRole.Text : TextRole.Password);
-            ShowPassword = !ShowPassword;
-        }
-        else
-        {
-            _passwordTextRole = textRole.Value;
-        }
-
     }
 }
 

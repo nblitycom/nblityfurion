@@ -1,9 +1,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Blazorise;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
+using MudBlazor.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -146,7 +144,7 @@ public class NblityBlazorModule : AbpModule
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureSwaggerServices(context.Services);
         ConfigureAutoApiControllers();
-        ConfigureBlazorise(context);
+        ConfigureMudBlazor(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
     }
@@ -252,16 +250,18 @@ public class NblityBlazorModule : AbpModule
     }
 
 
-    private void ConfigureBlazorise(ServiceConfigurationContext context)
+    private void ConfigureMudBlazor(ServiceConfigurationContext context)
     {
-        context.Services
-            .AddBlazorise(options =>
-            {
-                // TODO (IMPORTANT): To use Blazorise, you need a license key. Get your license key directly from Blazorise, follow  the instructions at https://abp.io/faq#how-to-get-blazorise-license-key
-                //options.ProductToken = "Your Product Token";
-            })
-            .AddBootstrap5Providers()
-            .AddFontAwesomeIcons();
+        context.Services.AddMudServices(config =>
+        {
+            config.SnackbarConfiguration.PositionClass = MudBlazor.Defaults.Classes.Position.BottomRight;
+            config.SnackbarConfiguration.PreventDuplicates = false;
+            config.SnackbarConfiguration.NewestOnTop = true;
+            config.SnackbarConfiguration.ShowCloseIcon = true;
+            config.SnackbarConfiguration.VisibleStateDuration = 5000;
+        });
+
+        context.Services.AddScoped<Nblity.Blazor.Client.Services.UI.TabWorkspaceService>();
     }
 
     private void ConfigureMenu(ServiceConfigurationContext context)
