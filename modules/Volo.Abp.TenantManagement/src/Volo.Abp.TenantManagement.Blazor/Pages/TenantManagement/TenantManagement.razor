@@ -2,10 +2,8 @@
 @attribute [Authorize(TenantManagementPermissions.Tenants.Default)]
 @using Microsoft.AspNetCore.Authorization
 @using Volo.Abp.FeatureManagement.Blazor.Components
-@using Microsoft.AspNetCore.Components.Forms
-@using Volo.Abp.TenantManagement.Localization
-@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @using Volo.Abp.BlazoriseUI.Components.ObjectExtending
+@using Volo.Abp.TenantManagement.Localization
 @using Volo.Abp.AspNetCore.Components.Web
 @inject AbpBlazorMessageLocalizerHelper<AbpTenantManagementResource> LH
 @using Microsoft.Extensions.Localization
@@ -13,124 +11,102 @@
 @inject IStringLocalizer<AbpUiNavigationResource> LUiNavigation
 @inherits AbpCrudPageBase<ITenantAppService, TenantDto, Guid, GetTenantsInput, TenantCreateDto, TenantUpdateDto>
 
-<Card>
-    <CardHeader>
-        @* ************************* PAGE HEADER ************************* *@
-        <PageHeader Title="@L["Tenants"]"
-                    BreadcrumbItems="@BreadcrumbItems"
-                    Toolbar="@Toolbar">
-        </PageHeader>
-    </CardHeader>
-    <CardBody>
-        @* ************************* DATA GRID ************************* *@
-        <AbpExtensibleDataGrid TItem="TenantDto"
-                               Data="@Entities"
-                               ReadData="@OnDataGridReadAsync"
-                               TotalItems="@TotalCount"
-                               ShowPager="true"
-                               PageSize="@PageSize"
-                               CurrentPage="@CurrentPage"
-                               Columns="@TenantManagementTableColumns">
-        </AbpExtensibleDataGrid>
-    </CardBody>
-</Card>
+<MudCard>
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">@L["Tenants"]</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        @* ************************* DATA TABLE ************************* *@
+        <MudTable T="TenantDto" ServerData="LoadServerData" @ref="_table" Dense="true" Hover="true" Striped="true">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">@L["Tenants"]</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchText" Placeholder="@L["Search"]" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium"
+                              OnKeyUp="@OnSearchKeyUp" Immediate="true" Class="mt-0" />
+                @if (HasCreatePermission)
+                {
+                    <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="OpenCreateModalAsync" Class="ml-2">@L["NewTenant"]</MudButton>
+                }
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>@L["Actions"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Name" T="TenantDto">@L["TenantName"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" Dense="true">
+                        @if (HasUpdatePermission)
+                        {
+                            <MudMenuItem OnClick="@(() => OpenEditModalAsync(context))">@L["Edit"]</MudMenuItem>
+                        }
+                        @if (HasManageFeaturesPermission)
+                        {
+                            <MudMenuItem OnClick="@(() => OpenFeaturesModalAsync(context))">@L["Features"]</MudMenuItem>
+                        }
+                        @if (HasDeletePermission)
+                        {
+                            <MudMenuItem OnClick="@(() => DeleteEntityAsync(context))">@L["Delete"]</MudMenuItem>
+                        }
+                    </MudMenu>
+                </MudTd>
+                <MudTd DataLabel="@L["TenantName"]">@context.Name</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudCardContent>
+</MudCard>
 
 @* ************************* CREATE MODAL ************************* *@
-@if ( HasCreatePermission )
+@if (HasCreatePermission)
 {
-    <Modal @ref="CreateModal" Closing="@ClosingCreateModal">
-        <ModalContent Centered="true">
-            <Form id="CreateTenantForm">
-                <ModalHeader>
-                    <ModalTitle>@L["NewTenant"]</ModalTitle>
-                    <CloseButton Clicked="CloseCreateModalAsync"/>
-                </ModalHeader>
-                <ModalBody>
-                    <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["TenantName"] *</FieldLabel>
-                                <TextEdit @bind-Text="@NewEntity.Name" Autofocus="true">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["DisplayName:AdminEmailAddress"] *</FieldLabel>
-                                <TextEdit Role="@TextRole.Email" @bind-Text="@NewEntity.AdminEmailAddress">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                        <Validation MessageLocalizer="@LH.Localize">
-						<Field>
-                             <FieldLabel>@L["DisplayName:AdminPassword"] *</FieldLabel>
-                             <Addons>
-                                <Addon AddonType="AddonType.Body">
-                                    <TextEdit Role="ShowPassword ? TextRole.Text : TextRole.Password" @bind-Text="@NewEntity.AdminPassword">
-                                    </TextEdit>
-                                </Addon>
-                                <Addon AddonType="AddonType.End">
-                                    <Button Color="Color.Secondary" Clicked="@(() => TogglePasswordVisibility())">
-                                        <Icon Name="ShowPassword ? IconName.Eye : IconName.EyeSlash" />
-                                    </Button>
-                                </Addon>
-                            </Addons>
-                            <ValidationError Style="display: block" />
-                         </Field>
-                        </Validation>
-                        <ExtensionProperties TEntityType="TenantCreateDto" TResourceType="AbpTenantManagementResource" Entity="@NewEntity" LH="@LH" ModalType="ExtensionPropertyModalType.CreateModal" />
-                    </Validations>
-                </ModalBody>
-                <ModalFooter>
-                    <Button Color="Color.Primary" Outline Clicked="CloseCreateModalAsync">@L["Cancel"]</Button>
-                    <SubmitButton Form="CreateTenantForm" Clicked="@CreateEntityAsync"/>
-                </ModalFooter>
-            </Form>
-        </ModalContent>
-    </Modal>
+    <MudDialog @bind-Visible="_createDialogVisible" Options="@(new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true })">
+        <TitleContent>
+            <MudText Typo="Typo.h6">@L["NewTenant"]</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudForm @ref="_createForm">
+                <MudTextField @bind-Value="NewEntity.Name" Label="@($"{L["TenantName"]} *")" Class="mt-3" />
+                <MudTextField @bind-Value="NewEntity.AdminEmailAddress" Label="@($"{L["DisplayName:AdminEmailAddress"]} *")"
+                              InputType="InputType.Email" Class="mt-3" />
+                <MudTextField @bind-Value="NewEntity.AdminPassword" Label="@($"{L["DisplayName:AdminPassword"]} *")"
+                              InputType="@(_showPassword ? InputType.Text : InputType.Password)"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@(_showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                              OnAdornmentClick="@TogglePasswordVisibility" Class="mt-3" />
+                <ExtensionProperties TEntityType="TenantCreateDto" TResourceType="AbpTenantManagementResource" Entity="@NewEntity" LH="@LH" ModalType="ExtensionPropertyModalType.CreateModal" />
+            </MudForm>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="CloseCreateModalAsync">@L["Cancel"]</MudButton>
+            <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="@CreateEntityAsync">@L["Save"]</MudButton>
+        </DialogActions>
+    </MudDialog>
 }
 
 @* ************************* EDIT MODAL ************************* *@
-@if ( HasUpdatePermission )
+@if (HasUpdatePermission)
 {
-    <Modal @ref="EditModal" Closing="@ClosingEditModal">
-        <ModalContent Centered="true">
-            <Form id="EditTenantForm">
-                <ModalHeader>
-                    <ModalTitle>@L["Edit"]</ModalTitle>
-                    <CloseButton Clicked="CloseEditModalAsync"/>
-                </ModalHeader>
-                <ModalBody>
-                    <Validations @ref="@EditValidationsRef" Model="@EditingEntity" ValidateOnLoad="false">
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>@L["TenantName"] *</FieldLabel>
-                                <TextEdit @bind-Text="@EditingEntity.Name" Autofocus="true">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Field>
-                        </Validation>
-                    </Validations>
-                    <ExtensionProperties TEntityType="TenantUpdateDto" TResourceType="AbpTenantManagementResource" Entity="@EditingEntity" LH="@LH" ModalType="ExtensionPropertyModalType.EditModal" />
-                </ModalBody>
-                <ModalFooter>
-                    <Button Color="Color.Primary" Outline Clicked="CloseEditModalAsync">@L["Cancel"]</Button>
-                    <SubmitButton Form="EditTenantForm" Clicked="@UpdateEntityAsync"/>
-                </ModalFooter>
-            </Form>
-        </ModalContent>
-    </Modal>
+    <MudDialog @bind-Visible="_editDialogVisible" Options="@(new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true })">
+        <TitleContent>
+            <MudText Typo="Typo.h6">@L["Edit"]</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudForm @ref="_editForm">
+                <MudTextField @bind-Value="EditingEntity.Name" Label="@($"{L["TenantName"]} *")" Class="mt-3" />
+                <ExtensionProperties TEntityType="TenantUpdateDto" TResourceType="AbpTenantManagementResource" Entity="@EditingEntity" LH="@LH" ModalType="ExtensionPropertyModalType.EditModal" />
+            </MudForm>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="CloseEditModalAsync">@L["Cancel"]</MudButton>
+            <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="@UpdateEntityAsync">@L["Save"]</MudButton>
+        </DialogActions>
+    </MudDialog>
 }
 
 @if (HasManageFeaturesPermission)
 {
-    <FeatureManagementModal @ref="FeatureManagementModal"/>
+    <FeatureManagementModal @ref="FeatureManagementModal" />
 }
