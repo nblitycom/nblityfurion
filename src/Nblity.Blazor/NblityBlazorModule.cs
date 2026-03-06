@@ -260,6 +260,8 @@ public class NblityBlazorModule : AbpModule
             config.SnackbarConfiguration.ShowCloseIcon = true;
             config.SnackbarConfiguration.VisibleStateDuration = 5000;
         });
+
+        context.Services.AddScoped<Nblity.Blazor.Client.Services.UI.TabWorkspaceService>();
     }
 
     private void ConfigureMenu(ServiceConfigurationContext context)

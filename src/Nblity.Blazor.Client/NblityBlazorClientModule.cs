@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nblity.Blazor.Client.Navigation;
+using Nblity.Blazor.Client.Services.UI;
 using OpenIddict.Abstractions;
 using Volo.Abp.AspNetCore.Components.Web;
 using Volo.Abp.AspNetCore.Components.Web.Theming.Routing;
@@ -87,6 +88,8 @@ public class NblityBlazorClientModule : AbpModule
             config.SnackbarConfiguration.ShowCloseIcon = true;
             config.SnackbarConfiguration.VisibleStateDuration = 5000;
         });
+
+        context.Services.AddScoped<TabWorkspaceService>();
     }
 
     private static void ConfigureAuthentication(WebAssemblyHostBuilder builder)
