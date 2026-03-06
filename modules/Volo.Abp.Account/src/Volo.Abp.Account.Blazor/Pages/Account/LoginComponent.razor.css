@@ -1,0 +1,11 @@
+/* Full-viewport height centered login page */
+.login-page-container {
+    min-height: 100vh;
+    padding: 16px;
+}
+
+/* Login card dimensions */
+.login-card {
+    width: 100%;
+    max-width: 440px;
+}

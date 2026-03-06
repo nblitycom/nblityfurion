@@ -20,13 +20,13 @@
                         @{
                             var capturedGroup = group;
                         }
-                        <div class="abp-md-form">
+                        <MudStack Class="abp-md-form">
                             @((RenderFragment)(builder =>
                             {
                                 builder.OpenComponent(0, capturedGroup.ComponentType);
                                 builder.CloseComponent();
                             }))
-                        </div>
+                        </MudStack>
                     </MudTabPanel>
                 }
             </MudTabs>

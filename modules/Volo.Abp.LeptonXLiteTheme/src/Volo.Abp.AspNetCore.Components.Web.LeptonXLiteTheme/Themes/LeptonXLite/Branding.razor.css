@@ -1,0 +1,4 @@
+/* Override the left offset of the brand name to sit to the right of the logo */
+.lpx-brand-name-offset {
+    left: 58px !important;
+}

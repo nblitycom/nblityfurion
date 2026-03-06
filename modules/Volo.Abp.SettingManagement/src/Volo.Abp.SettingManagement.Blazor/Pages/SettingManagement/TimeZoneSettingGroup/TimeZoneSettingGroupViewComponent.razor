@@ -14,8 +14,8 @@
         }
     </MudSelect>
     <MudText Typo="Typo.caption" Class="mt-1">@L["TimezoneHelpText"].Value</MudText>
-    <div class="mt-3">
+    <MudStack Class="mt-3">
         <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
                    OnClick="@UpdateSettingsAsync">@L["Save"]</MudButton>
-    </div>
+    </MudStack>
 }

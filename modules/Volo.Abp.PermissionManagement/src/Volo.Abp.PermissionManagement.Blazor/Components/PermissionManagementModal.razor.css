@@ -1,7 +1,16 @@
-fieldset legend {
-    float: none;
-    width: auto;
+/* Scroll container for the permission list */
+.permission-scroll-container {
+    height: 500px;
+    overflow-y: auto;
 }
+
+/* Permission depth-based indentation (20 px per level) */
+.perm-depth-0 { margin-inline-start: 0; }
+.perm-depth-1 { margin-inline-start: 20px; }
+.perm-depth-2 { margin-inline-start: 40px; }
+.perm-depth-3 { margin-inline-start: 60px; }
+.perm-depth-4 { margin-inline-start: 80px; }
+.perm-depth-5 { margin-inline-start: 100px; }
 
 ::deep .lpx-scroll-pills-container ul {
     display: block;
@@ -37,4 +46,3 @@ fieldset legend {
     background-color: transparent;
     border-color: transparent;
 }
-

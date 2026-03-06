@@ -3,18 +3,17 @@
 @using Volo.Abp.Account.Localization
 @inject IStringLocalizer<AccountResource> L
 
-<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background-color:#f5f5f5;padding:16px;">
-    <div class="mud-paper mud-paper-elevation-4"
-         style="width:100%;max-width:440px;padding:40px;border-radius:8px;background:#fff;">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="login-page-container d-flex align-center justify-center">
+    <MudPaper Elevation="4" Class="login-card pa-10 rounded">
 
-        <div class="mud-typography mud-typography-h5" style="margin-bottom:24px;font-weight:500;">@L["Login"]</div>
+        <MudText Typo="Typo.h5" GutterBottom="true">@L["Login"]</MudText>
 
         @if (ShowRequireMigrateSeedMessage)
         {
-            <div style="background-color:#f44336;color:#fff;padding:12px 16px;border-radius:4px;margin-bottom:16px;">
-                <div style="font-weight:600;margin-bottom:4px;">@L["RequireMigrateSeedTitle"]</div>
-                <div>@L["RequireMigrateSeedMessage"]</div>
-            </div>
+            <MudAlert Severity="Severity.Error" Class="mb-4">
+                <MudText Typo="Typo.subtitle2">@L["RequireMigrateSeedTitle"]</MudText>
+                <MudText Typo="Typo.body2">@L["RequireMigrateSeedMessage"]</MudText>
+            </MudAlert>
         }
 
         @if (EnableLocalLogin)
@@ -24,79 +23,97 @@
                 <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
                 <input type="hidden" name="ReturnUrlHash" value="@ReturnUrlHash" />
 
-                <div class="mud-input-control" style="margin-bottom:24px;">
-                    <div class="mud-input-control-input-container">
-                        <div class="mud-input mud-input-outlined mud-shrink">
-                            <input class="mud-input-slot mud-input-root mud-input-root-outlined"
-                                   type="text"
-                                   id="LoginInput_UserNameOrEmailAddress"
-                                   name="LoginInput.UserNameOrEmailAddress"
-                                   autocomplete="username"
-                                   placeholder=" " />
-                            <div class="mud-input-outlined-border"></div>
-                        </div>
-                        <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol"
-                               for="LoginInput_UserNameOrEmailAddress">
-                            @L["UserNameOrEmailAddress"]
-                        </label>
-                    </div>
-                </div>
+                <MudTextField @bind-Value="_userNameOrEmail"
+                              Label="@L["UserNameOrEmailAddress"]"
+                              InputType="InputType.Text"
+                              AutoFocus="true"
+                              Variant="Variant.Outlined"
+                              UserAttributes="_userNameAttributes"
+                              Class="mb-4" />
 
-                <div class="mud-input-control" style="margin-bottom:24px;">
-                    <div class="mud-input-control-input-container">
-                        <div class="mud-input mud-input-outlined mud-shrink">
-                            <input class="mud-input-slot mud-input-root mud-input-root-outlined"
-                                   type="password"
-                                   id="LoginInput_Password"
-                                   name="LoginInput.Password"
-                                   autocomplete="current-password"
-                                   placeholder=" "
-                                   maxlength="128" />
-                            <div class="mud-input-outlined-border"></div>
-                        </div>
-                        <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol"
-                               for="LoginInput_Password">
-                            @L["Password"]
-                        </label>
-                    </div>
-                </div>
+                <MudTextField @bind-Value="_password"
+                              Label="@L["Password"]"
+                              InputType="InputType.Password"
+                              MaxLength="128"
+                              Variant="Variant.Outlined"
+                              UserAttributes="_passwordAttributes"
+                              Class="mb-4" />
 
-                <div style="margin-bottom:24px;display:flex;align-items:center;">
-                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;">
-                        <input type="checkbox" name="LoginInput.RememberMe" value="true"
-                               style="width:18px;height:18px;cursor:pointer;accent-color:#5b6abf;" />
-                        <span class="mud-typography mud-typography-body2">@L["RememberMe"]</span>
-                    </label>
-                </div>
+                <MudCheckBox @bind-Value="_rememberMe"
+                             Label="@L["RememberMe"]"
+                             UserAttributes="_rememberMeAttributes"
+                             Class="mb-4" />
 
-                <button type="submit" name="Action" value="Login"
-                        class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-default mud-ripple"
-                        style="width:100%;height:42px;text-transform:uppercase;font-weight:500;font-size:0.875rem;letter-spacing:.04em;margin-bottom:8px;">
-                    <span class="mud-button-label">@L["Login"]</span>
-                </button>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="MudBlazor.Color.Primary"
+                           FullWidth="true"
+                           UserAttributes="_loginButtonAttributes"
+                           Class="mb-2">
+                    @L["Login"]
+                </MudButton>
 
                 @if (ShowCancelButton)
                 {
-                    <button type="submit" name="Action" value="Cancel" formnovalidate
-                            class="mud-button-root mud-button mud-button-outlined mud-button-outlined-secondary mud-button-default mud-ripple"
-                            style="width:100%;height:42px;text-transform:uppercase;font-weight:500;font-size:0.875rem;letter-spacing:.04em;margin-top:8px;">
-                        <span class="mud-button-label">@L["Cancel"]</span>
-                    </button>
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Outlined"
+                               Color="MudBlazor.Color.Secondary"
+                               FullWidth="true"
+                               UserAttributes="_cancelButtonAttributes"
+                               Class="mt-2">
+                        @L["Cancel"]
+                    </MudButton>
                 }
             </form>
         }
 
         @if (!EnableLocalLogin && !HasExternalProviders)
         {
-            <div style="background-color:#ff9800;color:#fff;padding:12px 16px;border-radius:4px;margin-top:16px;">
+            <MudAlert Severity="Severity.Warning" Class="mt-4">
                 <strong>@L["InvalidLoginRequest"]</strong>
                 @L["ThereAreNoLoginSchemesConfiguredForThisClient"]
-            </div>
+            </MudAlert>
         }
-    </div>
-</div>
+    </MudPaper>
+</MudContainer>
 
 @code {
+    private string _userNameOrEmail = string.Empty;
+    private string _password = string.Empty;
+    private bool _rememberMe = false;
+
+    private static readonly Dictionary<string, object> _userNameAttributes = new()
+    {
+        { "name", "LoginInput.UserNameOrEmailAddress" },
+        { "id", "LoginInput_UserNameOrEmailAddress" },
+        { "autocomplete", "username" }
+    };
+
+    private static readonly Dictionary<string, object> _passwordAttributes = new()
+    {
+        { "name", "LoginInput.Password" },
+        { "id", "LoginInput_Password" },
+        { "autocomplete", "current-password" }
+    };
+
+    private static readonly Dictionary<string, object> _rememberMeAttributes = new()
+    {
+        { "name", "LoginInput.RememberMe" }
+    };
+
+    private static readonly Dictionary<string, object> _loginButtonAttributes = new()
+    {
+        { "name", "Action" },
+        { "value", "Login" }
+    };
+
+    private static readonly Dictionary<string, object> _cancelButtonAttributes = new()
+    {
+        { "name", "Action" },
+        { "value", "Cancel" },
+        { "formnovalidate", "formnovalidate" }
+    };
+
     [Parameter] public string ReturnUrl { get; set; } = string.Empty;
     [Parameter] public string ReturnUrlHash { get; set; } = string.Empty;
     [Parameter] public bool EnableLocalLogin { get; set; } = true;

@@ -1,0 +1,27 @@
+/* AppBar: surface background with bottom border matching the MudBlazor theme */
+::deep .appbar-surface {
+    background-color: var(--mud-palette-surface) !important;
+    color: var(--mud-palette-text-primary) !important;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+/* Tab bar strip below the AppBar */
+.tab-bar {
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+    min-height: 36px;
+    overflow-x: auto;
+    white-space: nowrap;
+    background-color: var(--mud-palette-surface);
+}
+
+/* Individual tab chips */
+.tab-chip {
+    border-radius: 4px 4px 0 0;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+/* Main content body - accounts for fixed AppBar height + tab bar */
+.content-area {
+    min-height: calc(100vh - 130px);
+}

@@ -16,10 +16,10 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1" Fixed="true" Dense="true" Style="background-color: var(--mud-palette-surface); color: var(--mud-palette-text-primary); border-bottom: 1px solid var(--mud-palette-lines-default);">
+    <MudAppBar Elevation="1" Fixed="true" Dense="true" Class="appbar-surface">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="MudBlazor.Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudImage Src="@(_isDarkMode ? "/images/logo/leptonxlite/logo-dark.png" : "/images/logo/leptonxlite/logo-light.png")" Alt="Logo" Height="28" Class="mr-2" />
-        <MudText Typo="Typo.h6" Style="font-weight: 600;">Nblity</MudText>
+        <MudText Typo="Typo.h6" Class="fw-bold">Nblity</MudText>
         <MudSpacer />
         <AuthorizeView>
             <Authorized>
@@ -54,7 +54,7 @@
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="false"
                ClipMode="DrawerClipMode.Always" Fixed="true">
         <MudDrawerHeader Dense="true" Class="pa-2">
-            <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">Menu</MudText>
+            <MudText Typo="Typo.subtitle2" Class="fw-bold">Menu</MudText>
         </MudDrawerHeader>
         <MudNavMenu Dense="true" Bordered="true" Color="MudBlazor.Color.Primary">
             @if (_mainMenu != null)
@@ -67,27 +67,24 @@
         </MudNavMenu>
     </MudDrawer>
 
-    <MudMainContent Style="padding-top: 48px;">
+    <MudMainContent>
         @* Tab Bar *@
-        <div style="background-color: var(--mud-palette-surface); border-bottom: 1px solid var(--mud-palette-lines-default); display: flex; align-items: center; padding: 0 8px; min-height: 36px; overflow-x: auto; white-space: nowrap;">
+        <MudPaper Square="true" Elevation="0" Class="tab-bar d-flex flex-row align-center px-2">
             @foreach (var tab in TabService.Tabs)
             {
                 var isActive = TabService.ActiveRoute == tab.Route ||
                     NormalizeRoute(TabService.ActiveRoute) == NormalizeRoute(tab.Route);
-                <div @key="tab.Route"
-                     style="display: inline-flex; align-items: center; padding: 4px 12px; margin: 2px 2px; cursor: pointer; border-radius: 4px 4px 0 0;
-                            font-size: 0.8125rem;
-                            @(isActive ? "background-color: var(--mud-palette-primary); color: white; font-weight: 600;" : "background-color: var(--mud-palette-background-gray); color: var(--mud-palette-text-secondary);")">
-                    <span @onclick="@(() => TabService.ActivateTab(tab.Route))" style="margin-right: 4px;">
-                        @tab.Title
-                    </span>
-                    @if (tab.IsClosable)
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.Close" Size="MudBlazor.Size.Small"
-                                       Style="@(isActive ? "color: white;" : "")"
-                                       OnClick="@(() => TabService.CloseTab(tab.Route))" />
-                    }
-                </div>
+                <MudChip @key="tab.Route"
+                         T="string"
+                         Value="@tab.Route"
+                         Color="@(isActive ? MudBlazor.Color.Primary : MudBlazor.Color.Default)"
+                         Variant="@(isActive ? Variant.Filled : Variant.Text)"
+                         Size="MudBlazor.Size.Small"
+                         OnClick="@(() => TabService.ActivateTab(tab.Route))"
+                         OnClose="@(tab.IsClosable ? (() => TabService.CloseTab(tab.Route)) : null)"
+                         Class="tab-chip my-0">
+                    @tab.Title
+                </MudChip>
             }
             <MudSpacer />
             @if (TabService.Tabs.Count(t => t.IsClosable) > 0)
@@ -97,10 +94,10 @@
                     <MudMenuItem OnClick="@(() => TabService.CloseAllTabsExceptHome())">Close All</MudMenuItem>
                 </MudMenu>
             }
-        </div>
+        </MudPaper>
 
         @* Content Area *@
-        <MudContainer MaxWidth="MaxWidth.False" Class="pa-4" Style="min-height: calc(100vh - 130px);">
+        <MudContainer MaxWidth="MaxWidth.False" Class="pa-4 content-area">
             @Body
         </MudContainer>
     </MudMainContent>

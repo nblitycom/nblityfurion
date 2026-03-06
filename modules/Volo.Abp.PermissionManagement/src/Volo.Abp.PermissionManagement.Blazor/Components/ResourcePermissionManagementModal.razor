@@ -8,12 +8,12 @@
     <DialogContent>
         @if (HasAnyResourcePermission && HasAnyResourceProviderKeyLookupService)
         {
-            <div class="d-grid gap-2 mb-2 d-md-flex justify-content-md-end">
+            <MudStack Row="true" Justify="Justify.FlexEnd" Class="mb-2">
                 <MudButton Color="MudBlazor.Color.Primary" Size="MudBlazor.Size.Small" Variant="Variant.Filled" OnClick="OpenCreateModalAsync">@L["AddResourcePermission"]</MudButton>
-            </div>
+            </MudStack>
             <MudTable Items="@ResourcePermissionList.Permissions" Dense="true" Hover="true" RowsPerPage="PageSize">
                 <HeaderContent>
-                    <MudTh Style="width: 150px">@L["Actions"]</MudTh>
+                    <MudTh Class="actions-column">@L["Actions"]</MudTh>
                     <MudTh>@L["ResourcePermissionTarget"]</MudTh>
                     <MudTh>@L["ResourcePermissionPermissions"]</MudTh>
                 </HeaderContent>
@@ -26,14 +26,14 @@
                     </MudTd>
                     <MudTd>
                         <MudTooltip Text="@context.ProviderNameDisplayName" Placement="Placement.Right">
-                            <span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1">@context.ProviderName</span>
+                            <MudChip T="string" Size="MudBlazor.Size.Small" Class="mr-1 ml-1 mb-1">@context.ProviderName</MudChip>
                         </MudTooltip>
                         @context.ProviderDisplayName
                     </MudTd>
                     <MudTd>
                         @foreach (var permission in context.Permissions)
                         {
-                            <span class="d-inline-block bg-light rounded-pill px-2 me-1 mb-1">@permission.DisplayName</span>
+                            <MudChip T="string" Size="MudBlazor.Size.Small" Class="mr-1 mb-1">@permission.DisplayName</MudChip>
                         }
                     </MudTd>
                 </RowTemplate>
@@ -70,7 +70,7 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_createForm">
-            <div class="mb-3">
+            <MudStack Class="mb-3">
                 <MudRadioGroup T="string"
                                Value="@CurrentLookupService"
                                ValueChanged="@OnLookupServiceCheckedValueChanged">
@@ -89,17 +89,17 @@
                                  RequiredError="@L["ThisFieldIsRequired."]"
                                  ResetValueOnEmptyText="true"
                                  Class="mt-1" />
-            </div>
-            <div class="mb-3">
+            </MudStack>
+            <MudStack Class="mb-3">
                 <MudText Typo="Typo.h6">@L["ResourcePermissionPermissions"]</MudText>
                 <MudSwitch T="bool" Value="CreateEntity.Permissions.All(x => x.IsGranted)" ValueChanged="GrantAllAsync" Label="@L["GrantAllResourcePermissions"]" Color="MudBlazor.Color.Primary" />
-                <div class="mt-2">
+                <MudStack Class="mt-2">
                     @foreach (var permission in CreateEntity.Permissions)
                     {
                         <MudCheckBox T="bool" Value="@permission.IsGranted" ValueChanged="@((c) => OnPermissionCheckedChanged(permission, c))" Label="@permission.DisplayName" />
                     }
-                </div>
-            </div>
+                </MudStack>
+            </MudStack>
         </MudForm>
     </DialogContent>
     <DialogActions>
@@ -114,16 +114,16 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_editForm">
-            <div class="mb-3">
+            <MudStack Class="mb-3">
                 <MudText Typo="Typo.h6">@L["ResourcePermissionPermissions"]</MudText>
                 <MudSwitch T="bool" Value="EditEntity.Permissions.All(x => x.IsGranted)" ValueChanged="GrantAllAsync" Label="@L["GrantAllResourcePermissions"]" Color="MudBlazor.Color.Primary" />
-                <div class="mt-2">
+                <MudStack Class="mt-2">
                     @foreach (var permission in EditEntity.Permissions)
                     {
                         <MudCheckBox T="bool" Value="@permission.IsGranted" ValueChanged="@((c) => OnPermissionCheckedChanged(permission, c))" Label="@permission.DisplayName" />
                     }
-                </div>
-            </div>
+                </MudStack>
+            </MudStack>
         </MudForm>
     </DialogContent>
     <DialogActions>

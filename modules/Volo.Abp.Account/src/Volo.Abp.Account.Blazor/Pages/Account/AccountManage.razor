@@ -25,10 +25,10 @@
                 <MudTextField @bind-Value="@ChangePasswordModel.NewPasswordConfirm"
                               Label="@L["DisplayName:NewPasswordConfirm"]"
                               InputType="InputType.Password" Class="mt-3" />
-                <div class="mt-3">
+                <MudStack Class="mt-3">
                     <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
                                OnClick="ChangePasswordAsync">@L["Save"]</MudButton>
-                </div>
+                </MudStack>
             </EditForm>
         }
     </MudTabPanel>
@@ -83,10 +83,10 @@
                         }
                     }
                 }
-                <div class="mt-3">
+                <MudStack Class="mt-3">
                     <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
                                OnClick="UpdatePersonalInfoAsync">@L["Save"]</MudButton>
-                </div>
+                </MudStack>
             </EditForm>
         }
     </MudTabPanel>
