@@ -7,6 +7,7 @@
 @inject NavigationManager Navigation
 @inject IMenuManager MenuManager
 @inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
 @implements IDisposable
 
 <MudThemeProvider Theme="_theme" IsDarkMode="@_isDarkMode" />
@@ -17,7 +18,7 @@
 <MudLayout>
     <MudAppBar Elevation="1" Fixed="true" Dense="true" Style="background-color: var(--mud-palette-surface); color: var(--mud-palette-text-primary); border-bottom: 1px solid var(--mud-palette-lines-default);">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="MudBlazor.Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-        <MudImage Src="/images/logo/leptonxlite/logo-light.svg" Alt="Logo" Height="28" Class="mr-2" />
+        <MudImage Src="@(_isDarkMode ? "/images/logo/leptonxlite/logo-dark.png" : "/images/logo/leptonxlite/logo-light.png")" Alt="Logo" Height="28" Class="mr-2" />
         <MudText Typo="Typo.h6" Style="font-weight: 600;">Nblity</MudText>
         <MudSpacer />
         <AuthorizeView>
@@ -143,6 +144,18 @@
     {
         TabService.OnTabsChanged += OnTabsChanged;
 
+        // Read persisted dark mode preference to stay in sync with the
+        // inline <script> in App.razor that prevents the initial flash.
+        try
+        {
+            var stored = await JS.InvokeAsync<string?>("localStorage.getItem", "isDarkMode");
+            _isDarkMode = stored == "true";
+        }
+        catch
+        {
+            // localStorage may not be available during prerendering
+        }
+
         try
         {
             _mainMenu = await MenuManager.GetMainMenuAsync();
@@ -245,7 +258,18 @@
 
     private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
 
-    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+    private async Task ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        try
+        {
+            await JS.InvokeVoidAsync("localStorage.setItem", "isDarkMode", _isDarkMode.ToString().ToLowerInvariant());
+        }
+        catch
+        {
+            // localStorage may not be available during prerendering
+        }
+    }
 
     private void CloseOtherTabs()
     {
