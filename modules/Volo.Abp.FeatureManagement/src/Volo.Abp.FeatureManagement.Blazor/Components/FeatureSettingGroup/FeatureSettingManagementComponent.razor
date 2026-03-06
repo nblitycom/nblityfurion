@@ -2,12 +2,12 @@
 
 @if (Settings != null && Settings.HasManageHostFeaturesPermission)
 {
-    <Form>
-        <Paragraph>@L["ManageHostFeaturesText"]</Paragraph>
-        <Button Size="Size.Small" Color="Color.Primary" onclick="@OnManageHostFeaturesClicked">
-            <Icon Name="@("fa-cog")"/> @L["ManageHostFeatures"]
-        </Button>
-    </Form>
-    
+    <MudText Class="mb-3">@L["ManageHostFeaturesText"]</MudText>
+    <MudButton Size="MudBlazor.Size.Small" Color="MudBlazor.Color.Primary" Variant="Variant.Filled"
+               OnClick="@OnManageHostFeaturesClicked">
+        <MudIcon Icon="@Icons.Material.Filled.Settings" Class="mr-1" />
+        @L["ManageHostFeatures"]
+    </MudButton>
+
     <FeatureManagementModal @ref="FeatureManagementModal"/>
 }

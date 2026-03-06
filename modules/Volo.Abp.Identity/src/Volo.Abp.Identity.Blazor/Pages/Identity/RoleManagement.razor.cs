@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Blazorise;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -50,9 +49,6 @@ public partial class RoleManagement
 
     protected override ValueTask SetBreadcrumbItemsAsync()
     {
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(LUiNavigation["Menu:Administration"].Value));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Menu:IdentityManagement"].Value));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Roles"].Value));
         return base.SetBreadcrumbItemsAsync();
     }
 
@@ -233,11 +229,6 @@ public partial class RoleManagement
 
     protected override ValueTask SetToolbarItemsAsync()
     {
-        Toolbar.AddButton(L["NewRole"],
-            OpenCreateModalAsync,
-            IconName.Add,
-            requiredPolicyName: CreatePolicyName);
-
         return base.SetToolbarItemsAsync();
     }
 }

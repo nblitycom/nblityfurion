@@ -1,3 +1,4 @@
+@inherits LayoutComponentBase
 @using MudBlazor
 @using Nblity.Blazor.Client.Services.UI
 @using Volo.Abp.UI.Navigation
@@ -23,7 +24,7 @@
             <Authorized>
                 <MudMenu Icon="@Icons.Material.Filled.Person" Color="MudBlazor.Color.Inherit" Dense="true"
                          AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
-                    <ActivatorContent>
+                    <ActivatorContent Context="activatorContext">
                         <MudChip T="string" Color="MudBlazor.Color.Primary" Variant="Variant.Text" Icon="@Icons.Material.Filled.AccountCircle">
                             @_userName
                         </MudChip>

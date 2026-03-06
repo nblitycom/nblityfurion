@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blazorise;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
@@ -27,7 +26,7 @@ public partial class FeatureManagementModal
 
     [Inject] protected ICurrentApplicationConfigurationCacheResetService CurrentApplicationConfigurationCacheResetService { get; set; }
 
-    protected Modal Modal;
+    private bool _featureModalVisible;
 
     protected string ProviderName;
     protected string ProviderKey;
@@ -81,7 +80,8 @@ public partial class FeatureManagementModal
                 }
             }
 
-            await InvokeAsync(Modal.Show);
+            _featureModalVisible = true;
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
@@ -91,7 +91,8 @@ public partial class FeatureManagementModal
 
     public virtual Task CloseModal()
     {
-        return InvokeAsync(Modal.Hide);
+        _featureModalVisible = false;
+        return InvokeAsync(StateHasChanged);
     }
 
     protected virtual async Task SaveAsync()
@@ -112,7 +113,7 @@ public partial class FeatureManagementModal
 
             await CurrentApplicationConfigurationCacheResetService.ResetAsync();
 
-            await InvokeAsync(Modal.Hide);
+            await CloseModal();
             await Notify.Success(L["SavedSuccessfully"]);
         }
         catch (Exception ex)
@@ -232,12 +233,5 @@ public partial class FeatureManagementModal
     {
         return StringLocalizerFactory.CreateByResourceNameOrNull(resourceName) ??
                StringLocalizerFactory.CreateDefaultOrNull();
-    }
-
-    protected virtual Task ClosingModal(ModalClosingEventArgs eventArgs)
-    {
-        eventArgs.Cancel = eventArgs.CloseReason == CloseReason.FocusLostClosing;
-
-        return Task.CompletedTask;
     }
 }

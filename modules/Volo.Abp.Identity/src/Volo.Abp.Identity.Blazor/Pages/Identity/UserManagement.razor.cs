@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazorise;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -87,9 +86,6 @@ public partial class UserManagement
 
     protected override ValueTask SetBreadcrumbItemsAsync()
     {
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(LUiNavigation["Menu:Administration"].Value));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Menu:IdentityManagement"].Value));
-        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Users"].Value));
         return base.SetBreadcrumbItemsAsync();
     }
 
@@ -352,10 +348,6 @@ public partial class UserManagement
 
     protected override ValueTask SetToolbarItemsAsync()
     {
-        Toolbar.AddButton(L["NewUser"], OpenCreateModalAsync,
-            IconName.Add,
-            requiredPolicyName: CreatePolicyName);
-
         return base.SetToolbarItemsAsync();
     }
 }
